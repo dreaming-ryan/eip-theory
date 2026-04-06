@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회차별 기출문제 — 정보처리기사 실기</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F6F4EF;--surface:#fff;--border:#E5E2D8;--text-main:#1A1917;--text-sub:#6B6760;--text-muted:#A8A49E;--green:#1B7A5A;--green-l:#E3F4EE;--warm:#C05C1A;--warm-l:#FEF0E6;--r-lg:18px;--r-md:12px;--sh-sm:0 1px 4px rgba(0,0,0,.06);--sh-md:0 4px 20px rgba(0,0,0,.09);--sh-lg:0 12px 40px rgba(0,0,0,.12)}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.site-header{width:100%;padding:1.1rem 1.5rem;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10}
+.back-btn{display:flex;align-items:center;gap:6px;text-decoration:none;font-size:13px;font-weight:500;color:var(--text-sub);padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);transition:all .15s;flex-shrink:0}
+.back-btn:hover{color:var(--text-main);border-color:#ccc}
+.header-title{font-size:15px;font-weight:600;color:var(--text-main)}
+.header-badge{margin-left:auto;font-size:12px;font-weight:500;color:var(--green);background:var(--green-l);padding:4px 12px;border-radius:20px}
+.main{width:100%;max-width:680px;padding:2.5rem 1.5rem 6rem}
+.page-hero{margin-bottom:2rem;animation:fadeUp .5s ease both}
+.page-hero h1{font-size:22px;font-weight:700;letter-spacing:-.03em;margin-bottom:5px}
+.page-hero p{font-size:13px;color:var(--text-sub)}
+/* skeleton */
+.skel{display:inline-block;background:linear-gradient(90deg,#ece9e0 25%,#f6f4ef 50%,#ece9e0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:4px;vertical-align:middle}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* year group */
+.year-group{margin-bottom:2rem;animation:fadeUp .5s ease both}
+.year-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.year-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.rounds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+/* round card */
+.round-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.2rem 1.1rem 1rem;text-decoration:none;display:flex;flex-direction:column;gap:8px;transition:all .18s ease;position:relative;overflow:hidden;box-shadow:var(--sh-sm)}
+.round-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .2s ease}
+.round-card:hover{border-color:var(--green-l);box-shadow:var(--sh-md);transform:translateY(-2px)}
+.round-card:hover::after{transform:scaleX(1)}
+.round-card.special::after{background:var(--warm)}
+.round-card.special:hover{border-color:var(--warm-l)}
+.round-badge{font-size:10px;font-weight:600;color:var(--green);background:var(--green-l);padding:2px 8px;border-radius:6px;display:inline-block;width:fit-content}
+.round-card.special .round-badge{background:#FEF3E2;color:var(--warm)}
+.round-title{font-size:14px;font-weight:700;color:var(--text-main);letter-spacing:-.02em;line-height:1.3}
+.round-count{font-size:11px;font-weight:600;color:var(--text-sub);display:flex;align-items:center;gap:4px}
+/* 로딩 placeholder */
+.placeholder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.placeholder-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.2rem 1.1rem 1rem;height:110px}
+.footer{text-align:center;font-size:12px;color:var(--text-muted);padding:1.5rem;border-top:1px solid var(--border);width:100%}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.rounds-grid,.placeholder-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="back-btn" href="index.html">← 홈</a>
+  <span class="header-title">📅 회차별 기출문제</span>
+  <span class="header-badge" id="header-badge">로딩 중…</span>
+</header>
+
+<main class="main">
+  <div class="page-hero">
+    <h1>회차별 기출문제 풀기</h1>
+    <p>연도·회차를 선택하면 해당 회차의 이론 문제만 보입니다.</p>
+  </div>
+
+  <!-- JS가 동적으로 채움 -->
+  <div id="rounds-container">
+    <!-- 로딩 중 스켈레톤 -->
+    <div class="year-group">
+      <div class="year-label">불러오는 중…</div>
+      <div class="placeholder-grid">
+        <div class="placeholder-card"><span class="skel" style="width:80%;height:14px;display:block;margin-bottom:8px"></span><span class="skel" style="width:60%;height:20px;display:block"></span></div>
+        <div class="placeholder-card"><span class="skel" style="width:80%;height:14px;display:block;margin-bottom:8px"></span><span class="skel" style="width:60%;height:20px;display:block"></span></div>
+        <div class="placeholder-card"><span class="skel" style="width:80%;height:14px;display:block;margin-bottom:8px"></span><span class="skel" style="width:60%;height:20px;display:block"></span></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">정보처리기사 실기 이론 기출문제 학습 자료</footer>
+
+<script src="stats.js"></script>
+<script>
+QuizStats.load(function(s) {
+  // 헤더 배지
+  document.getElementById('header-badge').textContent = s.totalRounds + '개 회차';
+
+  const container = document.getElementById('rounds-container');
+  container.innerHTML = '';
+
+  // 연도별 그룹 렌더링 (오름차순)
+  s.years.forEach(function(year, yi) {
+    const rounds = s.yearRounds[year]; // ['1회','2회',...]
+
+    const group = document.createElement('div');
+    group.className = 'year-group';
+    group.style.animationDelay = (yi * 0.06) + 's';
+
+    // 연도 레이블
+    const label = document.createElement('div');
+    label.className = 'year-label';
+    label.textContent = year + '년';
+    group.appendChild(label);
+
+    // 그리드
+    const grid = document.createElement('div');
+    grid.className = 'rounds-grid';
+
+    rounds.forEach(function(round) {
+      const key = year + '_' + round;
+      const count = s.roundMap[key] || 0;
+      const is4th = round === '4회';
+
+      // URL 인코딩 파라미터
+      const href = 'quiz.html?year=' + encodeURIComponent(year) +
+                   '&round='         + encodeURIComponent(round);
+
+      const card = document.createElement('a');
+      card.className = 'round-card' + (is4th ? ' special' : '');
+      card.href = href;
+      card.innerHTML =
+        '<span class="round-badge">' + round + '</span>' +
+        '<div class="round-title">' + year + '년<br>' + round + '</div>' +
+        '<div class="round-count">📝 ' + count + '문항</div>';
+
+      grid.appendChild(card);
+    });
+
+    group.appendChild(grid);
+    container.appendChild(group);
+  });
+});
+</script>
+</body>
+</html>

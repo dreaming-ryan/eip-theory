@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>키워드별 기출문제 — 정보처리기사 실기</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F6F4EF;--surface:#fff;--border:#E5E2D8;--text-main:#1A1917;--text-sub:#6B6760;--text-muted:#A8A49E;--r-lg:18px;--r-md:12px;--sh-sm:0 1px 4px rgba(0,0,0,.06);--sh-lg:0 12px 40px rgba(0,0,0,.14)}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.site-header{width:100%;padding:1.1rem 1.5rem;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10}
+.back-btn{display:flex;align-items:center;gap:6px;text-decoration:none;font-size:13px;font-weight:500;color:var(--text-sub);padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);transition:all .15s;flex-shrink:0}
+.back-btn:hover{color:var(--text-main);border-color:#ccc}
+.header-title{font-size:15px;font-weight:600;color:var(--text-main)}
+.header-badge{margin-left:auto;font-size:12px;font-weight:500;color:#4A3FA0;background:#ECEAFA;padding:4px 12px;border-radius:20px}
+.main{width:100%;max-width:680px;padding:2.5rem 1.5rem 6rem}
+.page-hero{margin-bottom:2rem;animation:fadeUp .5s ease both}
+.page-hero h1{font-size:22px;font-weight:700;letter-spacing:-.03em;margin-bottom:5px}
+.page-hero p{font-size:13px;color:var(--text-sub)}
+.total-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1rem 1.3rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;animation:fadeUp .5s .05s ease both}
+.total-bar-label{font-size:12px;color:var(--text-sub);font-weight:500}
+.total-bar-val{font-size:13px;font-weight:700;color:var(--text-main)}
+/* skeleton */
+.skel{display:inline-block;background:linear-gradient(90deg,#ece9e0 25%,#f6f4ef 50%,#ece9e0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:4px;vertical-align:middle}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem 1.4rem 1.3rem;text-decoration:none;display:flex;flex-direction:column;gap:10px;transition:all .2s ease;position:relative;overflow:hidden;box-shadow:var(--sh-sm);cursor:pointer}
+.cat-card:hover{box-shadow:var(--sh-lg);transform:translateY(-3px)}
+.cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--c,#888);transform:scaleX(0);transform-origin:left;transition:transform .22s ease}
+.cat-card:hover::before{transform:scaleX(1)}
+.cat-card:hover{border-color:var(--cl,#eee)}
+.cat-emoji{font-size:28px;line-height:1}
+.cat-name{font-size:15px;font-weight:700;color:var(--text-main);letter-spacing:-.02em}
+.cat-stats{display:flex;flex-direction:column;gap:4px}
+.cat-stat-row{display:flex;align-items:center;justify-content:space-between}
+.cat-stat-label{font-size:11px;color:var(--text-muted)}
+.cat-stat-val{font-size:12px;font-weight:600;color:var(--c,#888)}
+.progress-wrap{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-bar{height:100%;background:var(--c,#888);border-radius:3px;transition:width .6s ease}
+.cat-arrow{position:absolute;bottom:14px;right:16px;font-size:16px;color:var(--text-muted);transition:transform .2s,color .2s}
+.cat-card:hover .cat-arrow{transform:translate(2px,-2px);color:var(--c,#888)}
+.cat-card.wide{grid-column:span 2;flex-direction:row;align-items:center;gap:20px;padding:1.3rem 1.6rem}
+.cat-card.wide .cat-stats{flex:1}
+.footer{text-align:center;font-size:12px;color:var(--text-muted);padding:1.5rem;border-top:1px solid var(--border);width:100%}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.cat-grid{grid-template-columns:1fr}.cat-card.wide{grid-column:span 1;flex-direction:column}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="back-btn" href="index.html">← 홈</a>
+  <span class="header-title">🏷️ 키워드별 기출문제</span>
+  <span class="header-badge" id="header-badge">로딩 중…</span>
+</header>
+
+<main class="main">
+  <div class="page-hero">
+    <h1>키워드별 기출문제 풀기</h1>
+    <p>취약한 분야를 집중적으로 공략해보세요.</p>
+  </div>
+
+  <div class="total-bar">
+    <span class="total-bar-label">📊 전체 문항</span>
+    <span class="total-bar-val" id="total-bar-val">
+      <span class="skel" style="width:160px;height:16px"></span>
+    </span>
+  </div>
+
+  <div class="cat-grid" id="cat-grid">
+    <!-- 로딩 스켈레톤 -->
+    <div class="cat-card" style="height:170px">
+      <span class="skel" style="width:36px;height:36px;border-radius:8px"></span>
+      <span class="skel" style="width:70%;height:18px"></span>
+      <span class="skel" style="width:90%;height:50px"></span>
+    </div>
+    <div class="cat-card" style="height:170px">
+      <span class="skel" style="width:36px;height:36px;border-radius:8px"></span>
+      <span class="skel" style="width:70%;height:18px"></span>
+      <span class="skel" style="width:90%;height:50px"></span>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">정보처리기사 실기 이론 기출문제 학습 자료</footer>
+
+<script src="stats.js"></script>
+<script>
+// 카테고리별 이모티콘·테마색 정의
+var CAT_META = {
+  'SW 개발/계획': { emoji:'⚙️', c:'#4A3FA0', cl:'#ECEAFA' },
+  '정보보안':     { emoji:'🔐', c:'#A0224A', cl:'#FCE8EF' },
+  '데이터베이스': { emoji:'🗄️', c:'#1558B0', cl:'#E4EDF9' },
+  '네트워크':     { emoji:'🌐', c:'#9A5800', cl:'#FEF3E2' },
+  '기타 용어':    { emoji:'📚', c:'#505050', cl:'#F0EFEB' },
+  'SQL문':        { emoji:'📋', c:'#0F6E56', cl:'#E3F4EE' },
+  '운영체제':     { emoji:'💻', c:'#2A6B28', cl:'#E6F3E5' }
+};
+// 카테고리 표시 순서 (출제 많은 순 고정)
+var CAT_ORDER = ['SW 개발/계획','정보보안','데이터베이스','네트워크','기타 용어','SQL문','운영체제'];
+
+QuizStats.load(function(s) {
+  const minY = s.years[0], maxY = s.years[s.years.length-1];
+  const total = s.totalQ;
+
+  // 헤더 배지
+  document.getElementById('header-badge').textContent =
+    Object.keys(s.catMap).length + '개 카테고리';
+
+  // 합계 바
+  document.getElementById('total-bar-val').textContent =
+    total + '문항 · ' + minY + '~' + maxY + '년 전 회차';
+
+  // 카테고리 카드 렌더링
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+
+  // catMap에 있는 카테고리 중 ORDER 기준으로 정렬, 없으면 뒤에 추가
+  var cats = [];
+  CAT_ORDER.forEach(function(cat) {
+    if (s.catMap[cat]) cats.push(cat);
+  });
+  Object.keys(s.catMap).forEach(function(cat) {
+    if (cats.indexOf(cat) === -1) cats.push(cat);
+  });
+
+  cats.forEach(function(cat, i) {
+    const count = s.catMap[cat] || 0;
+    const pct   = ((count / total) * 100).toFixed(1);
+    const barW  = Math.max(1, (count / total) * 100).toFixed(1);
+    const meta  = CAT_META[cat] || { emoji:'📌', c:'#888', cl:'#eee' };
+    const isWide = (i === cats.length - 1) && (cats.length % 2 !== 0);
+    const href  = 'quiz.html?cat=' + encodeURIComponent(cat);
+
+    const card = document.createElement('a');
+    card.className = 'cat-card' + (isWide ? ' wide' : '');
+    card.href = href;
+    card.style.setProperty('--c', meta.c);
+    card.style.setProperty('--cl', meta.cl);
+    card.style.animationDelay = (i * 0.06) + 's';
+    card.style.animation = 'fadeUp .5s ' + (i * 0.06) + 's ease both';
+
+    card.innerHTML =
+      '<span class="cat-emoji">' + meta.emoji + '</span>' +
+      '<div class="cat-name">' + cat + '</div>' +
+      '<div class="cat-stats">' +
+        '<div class="cat-stat-row">' +
+          '<span class="cat-stat-label">출제 횟수</span>' +
+          '<span class="cat-stat-val">' + count + '문항</span>' +
+        '</div>' +
+        '<div class="cat-stat-row">' +
+          '<span class="cat-stat-label">출제율</span>' +
+          '<span class="cat-stat-val">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="progress-wrap">' +
+          '<div class="progress-bar" style="width:' + barW + '%"></div>' +
+        '</div>' +
+      '</div>' +
+      '<span class="cat-arrow">↗</span>';
+
+    grid.appendChild(card);
+  });
+});
+</script>
+</body>
+</html>
