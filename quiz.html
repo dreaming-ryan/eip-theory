@@ -489,10 +489,10 @@ FROM T1 A CROSS JOIN T2 B
 WHERE A.NAME LIKE B.RULE;</div>`,
     ansHtml:`<div class="answer-val">4</div><div class="tbl-wrap" style="margin-top:10px"><div class="tbl-label">CROSS JOIN 결과 (T1×T2, 총 6행) 및 LIKE 조건 평가</div><table class="db-table" style="min-width:380px"><tr><th>A.NAME</th><th>B.RULE</th><th>LIKE 결과</th></tr><tr class="highlight-row"><td>smith</td><td>s%</td><td>✓ s로 시작</td></tr><tr class="highlight-row"><td>smith</td><td>%t%</td><td>✓ t 포함 (smi<b>t</b>h)</td></tr><tr class="fail-row"><td>allen</td><td>s%</td><td>✗ s로 시작 안 함</td></tr><tr class="fail-row"><td>allen</td><td>%t%</td><td>✗ t 포함 안 됨</td></tr><tr class="highlight-row"><td>scott</td><td>s%</td><td>✓ s로 시작</td></tr><tr class="highlight-row"><td>scott</td><td>%t%</td><td>✓ t 포함 (sco<b>tt</b>)</td></tr></table></div><div class="keyword-detail" style="margin-top:8px">CROSS JOIN: 두 테이블 모든 행 조합(카티션 곱). 3×2=6가지 중 LIKE 조건 만족 4개 → COUNT(*)=<b>4</b>.</div>` },
   { id:'25_3_12', year:'2025', round:'3회', cat:'SQL문',
-    qHtml:`<div class="q-text">아래 테이블 A를 대상으로 다음 SQL 문을 실행했을 때의 결과값을 쓰시오.<br><br><div class="tbl-wrap"><div class="tbl-label">테이블 A</div><table class="db-table"><tr><th>col1</th><th>col2</th></tr><tr><td>1</td><td>1</td></tr><tr><td>2</td><td>2</td></tr><tr><td>2</td><td>3</td></tr><tr><td>3</td><td>NULL</td></tr><tr><td>3</td><td>5</td></tr><tr><td>4</td><td>4</td></tr></table></div><div class="sql-box">SELECT COUNT(col2)
+    qHtml:`<div class="q-text">아래 테이블 A를 대상으로 다음 SQL 문을 실행했을 때의 결과값을 쓰시오.<br><br><div class="tbl-wrap"><div class="tbl-label">[A테이블]</div><table class="db-table"><tr><th>col1</th><th>col2</th></tr><tr><td>2</td><td>null</td></tr><tr><td>2</td><td>8</td></tr><tr><td>3</td><td>3</td></tr><tr><td>null</td><td>5</td></tr><tr><td>4</td><td>5</td></tr></table></div><div class="sql-box" style="margin-top:10px">SELECT COUNT(col2)
 FROM A
 WHERE col1 IN (2, 3) OR col2 IN (3, 5)</div>`,
-    ansHtml:`<div class="answer-val">4</div><div class="tbl-wrap" style="margin-top:10px"><div class="tbl-label">WHERE 조건 충족 행</div><table class="db-table"><tr><th>col1</th><th>col2</th><th>COUNT 포함 여부</th></tr><tr class="highlight-row"><td>2</td><td>2</td><td>✓ col1=2</td></tr><tr class="highlight-row"><td>2</td><td>3</td><td>✓ col1=2, col2=3</td></tr><tr class="highlight-row"><td>3</td><td>NULL</td><td>✓ col1=3 (col2=NULL → COUNT 제외)</td></tr><tr class="highlight-row"><td>3</td><td>5</td><td>✓ col1=3, col2=5</td></tr></table></div><div class="keyword-detail" style="margin-top:8px">COUNT(col2)는 NULL을 집계에서 제외한다. 조건 충족 4행 중 col2=NULL 1행 제외 → 복원 기준 정답 <b>4</b>.</div>` },
+    ansHtml:`<div class="answer-val">4</div><div class="tbl-wrap" style="margin-top:10px"><div class="tbl-label">WHERE 조건 충족 행</div><table class="db-table"><tr><th>col1</th><th>col2</th><th>COUNT 포함 여부</th></tr><tr class="fail-row"><td>2</td><td>null</td><td>✓ 조건 충족 / col2=null → COUNT 제외</td></tr><tr class="highlight-row"><td>2</td><td>8</td><td>✓ col1=2 → COUNT 포함</td></tr><tr class="highlight-row"><td>3</td><td>3</td><td>✓ col1=3, col2=3 → COUNT 포함</td></tr><tr class="highlight-row"><td>null</td><td>5</td><td>✓ col2=5 → COUNT 포함</td></tr><tr class="highlight-row"><td>4</td><td>5</td><td>✓ col2=5 → COUNT 포함</td></tr></table></div><div class="keyword-detail" style="margin-top:8px">COUNT(col2)는 NULL 제외. 조건 충족 5행 중 col2=null인 1행은 COUNT 제외 → COUNT(col2) = <b>4</b>.</div>` },
 
   // ─── 2025년 2회 ───
   { id:'25_2_1', year:'2025', round:'2회', cat:'데이터베이스',
@@ -508,8 +508,90 @@ WHERE col1 IN (2, 3) OR col2 IN (3, 5)</div>`,
     qHtml:`<div class="q-text">CPU 스케줄링 알고리즘에 대한 설명이다. (1)과 (2)에 해당하는 알고리즘 명칭을 각각 쓰시오.<br><br>(1) CPU 실행 시간(Burst Time)이 가장 짧은 프로세스를 먼저 처리하는 비선점형 방식이다.<br><br>(2) (1)의 선점형 구현으로, 더 짧은 잔여 실행 시간을 가진 프로세스가 도착하면 즉시 CPU를 선점한다.</div>`,
     ansHtml:`<div class="answer-val">(1) SJF (Shortest Job First)<br>(2) SRT (Shortest Remaining Time)</div><div class="keyword-detail">SJF: 비선점형, 평균 대기시간 최소화. SRT: SJF의 선점형 버전, 잔여 실행 시간 기준 선점.</div>` },
   { id:'25_2_5', year:'2025', round:'2회', cat:'SW 개발/계획',
-    qHtml:`<div class="q-text">분기 커버리지(Branch Coverage)를 만족하기 위해 아래 제어 흐름 그래프의 테스트 경로를 두 가지 작성하시오. (조건 분기: 노드 3→4(참)/3→5(거짓), 노드 6→7(참)/6→1(거짓))<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:280px"><tr><th colspan="2">제어 흐름 노드 구조</th></tr><tr><td colspan="2" style="text-align:left">1(시작)→2→3(분기A)→4→5→6(분기B)→7→1(반복) 또는 종료</td></tr></table></div>`,
-    ansHtml:`<div class="answer-val">경로1: 1→2→3→4→5→6→1<br>경로2: 1→2→4→5→6→7</div><div class="keyword-detail">분기 커버리지: 모든 분기(참/거짓)를 최소 1회 이상 통과. 두 경로로 조건A·B의 참·거짓을 모두 커버해야 함.</div>` },
+    qHtml:`<div class="q-text">다음 아래 제어 흐름 그래프가 분기 커버리지를 만족하기 위한 테스팅 순서를 쓰시오.<br><br><div style="display:flex;justify-content:center;margin:12px 0"><svg viewBox="0 0 460 600" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;font-family:monospace">
+<defs>
+  <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L9,3 z" fill="#4a7eba"/>
+  </marker>
+</defs>
+
+<!-- ===== 루프백 라인: ⑥YES → ① (맨 왼쪽) ===== -->
+<!-- ⑥ 왼쪽꼭짓점(105,405) → 왼쪽 세로선 → ① 왼쪽 끝 -->
+<polyline points="105,405 25,405 25,47 99,47" fill="none" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="64" y="432" text-anchor="middle" fill="#333" font-size="10">YES</text>
+
+<!-- ===== ① FLAG=FALSE ===== -->
+<rect x="99" y="28" width="148" height="38" rx="4" fill="#5b9bd5"/>
+<text x="173" y="52" text-anchor="middle" fill="white" font-size="11" font-weight="bold">FLAG = FALSE</text>
+<!-- 번호 원: 노드 우측 상단 바깥 -->
+<circle cx="262" cy="28" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="262" y="33" text-anchor="middle" fill="white" font-size="11" font-weight="bold">1</text>
+
+<!-- ①→② -->
+<line x1="173" y1="66" x2="173" y2="98" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ② X>K? (마름모) ===== -->
+<polygon points="173,102 235,133 173,164 111,133" fill="#5b9bd5"/>
+<text x="173" y="137" text-anchor="middle" fill="white" font-size="11" font-weight="bold">A &gt; B ?</text>
+<circle cx="249" cy="108" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="249" y="113" text-anchor="middle" fill="white" font-size="11" font-weight="bold">2</text>
+
+<!-- ② YES → ③ (오른쪽) -->
+<line x1="235" y1="133" x2="308" y2="133" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="269" y="125" text-anchor="middle" fill="#333" font-size="10">YES</text>
+
+<!-- ===== ③ FLAG=TRUE ===== -->
+<rect x="308" y="114" width="110" height="38" rx="4" fill="#5b9bd5"/>
+<text x="363" y="129" text-anchor="middle" fill="white" font-size="10" font-weight="bold">FLAG</text>
+<text x="363" y="143" text-anchor="middle" fill="white" font-size="10" font-weight="bold">= TRUE</text>
+<circle cx="308" cy="106" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="308" y="111" text-anchor="middle" fill="white" font-size="11" font-weight="bold">3</text>
+
+<!-- ③→② 루프백: ③ 상단→위로→② 상단꼭짓점 -->
+<polyline points="363,114 363,82 173,82 173,100" fill="none" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ② NO → ④ (아래) -->
+<line x1="173" y1="164" x2="173" y2="204" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ④ X=X+2 ===== -->
+<rect x="99" y="204" width="148" height="38" rx="4" fill="#5b9bd5"/>
+<text x="173" y="228" text-anchor="middle" fill="white" font-size="11" font-weight="bold">N = N + 2</text>
+<circle cx="262" cy="204" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="262" y="209" text-anchor="middle" fill="white" font-size="11" font-weight="bold">4</text>
+
+<!-- ④→⑤ -->
+<line x1="173" y1="242" x2="173" y2="282" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ⑤ CALL FUNC ===== -->
+<rect x="99" y="282" width="148" height="48" rx="4" fill="#5b9bd5"/>
+<text x="173" y="302" text-anchor="middle" fill="white" font-size="10" font-weight="bold">CALL FUNC(N,</text>
+<text x="173" y="320" text-anchor="middle" fill="white" font-size="10" font-weight="bold">FLAG, RES)</text>
+<circle cx="262" cy="282" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="262" y="287" text-anchor="middle" fill="white" font-size="11" font-weight="bold">5</text>
+
+<!-- ⑤→⑥ -->
+<line x1="173" y1="330" x2="173" y2="370" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ⑥ RESULT>1? (마름모) ===== -->
+<polygon points="173,374 235,405 173,436 111,405" fill="#5b9bd5"/>
+<text x="173" y="400" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RES</text>
+<text x="173" y="415" text-anchor="middle" fill="white" font-size="10" font-weight="bold">&gt; 1 ?</text>
+<circle cx="249" cy="380" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="249" y="385" text-anchor="middle" fill="white" font-size="11" font-weight="bold">6</text>
+
+<!-- ⑥ NO → ⑦ (오른쪽) -->
+<line x1="235" y1="405" x2="308" y2="405" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="269" y="397" text-anchor="middle" fill="#333" font-size="10">NO</text>
+
+<!-- ===== ⑦ OUTPUT RES ===== -->
+<rect x="308" y="386" width="110" height="38" rx="4" fill="#5b9bd5"/>
+<text x="363" y="401" text-anchor="middle" fill="white" font-size="10" font-weight="bold">OUTPUT</text>
+<text x="363" y="415" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RES</text>
+<circle cx="308" cy="378" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="308" y="383" text-anchor="middle" fill="white" font-size="11" font-weight="bold">7</text>
+
+</svg></div>`,
+    ansHtml:`<div class="answer-val">1234561, 124567 &nbsp; 또는 &nbsp; 1234567, 124561</div><div class="keyword-detail">분기 커버리지: ② YES/NO, ⑥ YES/NO 4개 분기 모두 최소 1회 통과. 경로1(1234561): ②YES→③→②NO→④⑤⑥YES→①. 경로2(124567): ②NO→④⑤⑥NO→⑦.</div>` },
   { id:'25_2_6', year:'2025', round:'2회', cat:'운영체제',
     qHtml:`<div class="q-text">라운드로빈(RR) 스케줄링을 사용한다. 타임 퀀텀은 4ms이며 컨텍스트 스위칭 시간은 무시한다. 아래 표를 참고하여 모든 프로세스의 평균 대기시간을 구하시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>프로세스</th><th>도착 시간(ms)</th><th>실행 시간(ms)</th></tr><tr><td>P1</td><td>0</td><td>8</td></tr><tr><td>P2</td><td>1</td><td>4</td></tr><tr><td>P3</td><td>2</td><td>9</td></tr><tr><td>P4</td><td>3</td><td>5</td></tr></table></div>`,
     ansHtml:`<div class="answer-val">11.75ms</div><div class="keyword-detail">실행 순서: P1(0~4)→P2(4~8)→P3(8~12)→P4(12~16)→P1(16~20)→P3(20~24)→P4(24~25)→P3(25~30). 대기: P1=8, P2=3, P3=13, P4=13 → 평균=37/4=11.75ms</div>` },
@@ -573,7 +655,7 @@ WHERE emp.id = sal.id AND incentive >= 500</div>`,
     qHtml:`<div class="q-text">아래 테이블에서 위반하고 있는 무결성 제약조건의 종류를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>학번(PK)</th><th>이름</th><th>학과</th></tr><tr><td>20231001</td><td>김민수</td><td>컴퓨터공학</td></tr><tr><td style="color:var(--color-text-danger,#A32D2D);background:var(--color-background-danger,#FCEBEB)">NULL</td><td>이영희</td><td>정보통신</td></tr><tr><td>20231003</td><td>박준호</td><td>소프트웨어</td></tr></table></div><div class="q-text" style="margin-top:8px">→ 기본 키(학번) 컬럼에 NULL 값이 존재한다.</div>`,
     ansHtml:`<div class="answer-val">개체 무결성 (Entity Integrity)</div><div class="keyword-detail">개체 무결성: 기본 키(PK)는 반드시 NOT NULL이어야 하며 중복될 수 없다. NULL이 존재하면 해당 튜플을 유일하게 식별할 수 없다.</div>` },
   { id:'24_3_5', year:'2024', round:'3회', cat:'기타 용어',
-    qHtml:`<div class="q-text">URL 구성 요소에 대한 설명이다. 각 설명에 해당하는 구성 요소를 보기에서 골라 URL에 등장하는 순서대로 번호를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:380px"><tr><th>구성 요소</th><th>설명</th></tr><tr><td>query</td><td>서버에 전달할 추가 데이터 (? 이후 부분)</td></tr><tr><td>path</td><td>서버 내 특정 자원을 가리키는 경로</td></tr><tr><td>scheme</td><td>리소스에 접근하는 프로토콜 (예: https)</td></tr><tr><td>authority</td><td>사용자 정보, 호스트명, 포트 번호</td></tr><tr><td>fragment</td><td>문서 내 특정 위치를 가리키는 앵커</td></tr></table></div><br>URL 순서: scheme://authority/path?query#fragment</div>`,
+    qHtml:`<div class="q-text">URL 구성 요소에 대한 설명이다. 각 설명에 해당하는 구성 요소를 보기에서 골라 URL에 등장하는 순서대로 번호를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:400px"><tr><th>번호</th><th>구성 요소</th><th>설명</th></tr><tr><td>1</td><td>query</td><td>서버에 전달할 추가 데이터</td></tr><tr><td>2</td><td>path</td><td>서버 내 특정 자원을 가리키는 경로</td></tr><tr><td>3</td><td>scheme</td><td>리소스에 접근하는 프로토콜 (예: https)</td></tr><tr><td>4</td><td>authority</td><td>사용자 정보, 호스트명, 포트번호</td></tr><tr><td>5</td><td>fragment</td><td>문서 내 특정 위치를 가리키는 앵커</td></tr></table></div><br>URL 예시 : https://ryan:2457@www.dream.com:443/index?id=5&amp;page=1#bottom</div>`,
     ansHtml:`<div class="answer-val">순서: scheme(3) → authority(4) → path(2) → query(1) → fragment(5)<br>번호 나열: 3 4 2 1 5</div><div class="keyword-detail">URL 구조: scheme://authority/path?query#fragment. 예: https://www.example.com/docs?id=1#top</div>` },
   { id:'24_3_6', year:'2024', round:'3회', cat:'SW 개발/계획',
     qHtml:`<div class="q-text">소프트웨어 테스트 커버리지 기준에 대한 설명이다. 각 설명에 해당하는 커버리지를 보기에서 골라 쓰시오.<br><br>1. 모든 실행 문장을 최소 한 번씩 수행했는지 측정<br>2. 모든 조건문에서 각 분기(참/거짓)를 최소 한 번씩 실행했는지 측정<br>3. 복합 조건문 내 개별 조건식 각각이 참·거짓으로 평가되는 경우를 모두 테스트했는지 측정<br><br>[보기] &nbsp; ㄱ.조건 &nbsp; ㄴ.경로 &nbsp; ㄷ.결정 &nbsp; ㄹ.분기 &nbsp; ㅁ.함수 &nbsp; ㅂ.문장 &nbsp; ㅅ.루프</div>`,
@@ -657,16 +739,15 @@ UPDATE 사원 [④] 부서='퇴사' WHERE 사원번호=32431;</div>`,
     qHtml:`<div class="q-text">아래에서 설명하는 사이버 공격 기법을 보기에서 골라 쓰시오.<br><br>1. 특정 표적을 선정하여 장기간에 걸쳐 지속적으로 공격을 감행한다.<br>2. 표적 내부 직원들이 사용하는 다양한 단말기를 공격 대상으로 삼는다.<br>3. Zero-day 취약점, 악성코드 등 다양한 공격 기술을 복합적으로 활용한다.<br>4. 일반적으로 침투→검색→수집→유출의 4단계로 진행된다.<br><br>[보기] &nbsp; ㄱ.사회공학기법 &nbsp; ㄴ.Adware &nbsp; ㄷ.MITM &nbsp; ㄹ.XDR &nbsp; ㅁ.Replace attack &nbsp; ㅂ.Key Logger attack &nbsp; ㅅ.APT</div>`,
     ansHtml:`<div class="answer-val">ㅅ. APT (Advanced Persistent Threat)</div><div class="keyword-detail">APT(지능형 지속 공격): 특정 표적 대상으로 장기간 은밀하게 수행되는 고도화된 사이버 공격. 국가 기반 해킹 그룹이 주로 사용.</div>` },
   { id:'24_1_9', year:'2024', round:'1회', cat:'SQL문',
-    qHtml:`<div class="q-text">아래 두 테이블 R1, R2를 참고하여 주어진 SQL의 실행 결과를 테이블 형태로 쓰시오.<br><br><div class="tables-row"><div><div class="tbl-label">테이블 R1</div><table class="db-table"><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>a</td><td>x</td></tr><tr><td>2</td><td>b</td><td>y</td></tr><tr><td>3</td><td>c</td><td>z</td></tr><tr><td>4</td><td>d</td><td>x</td></tr></table></div><div><div class="tbl-label">테이블 R2</div><table class="db-table"><tr><th>C</th><th>D</th></tr><tr><td>x</td><td>k</td></tr><tr><td>y</td><td>m</td></tr><tr><td>z</td><td>k</td></tr></table></div></div><div class="sql-box">SELECT B FROM R1
-WHERE C IN (SELECT C FROM R2 WHERE D='k')</div>`,
-    ansHtml:`<div class="answer-val">B 열에 a, c, d</div><div class="tbl-wrap" style="margin-top:8px"><table class="db-table"><tr><th>B</th></tr><tr class="highlight-row"><td>a</td></tr><tr class="highlight-row"><td>c</td></tr><tr class="highlight-row"><td>d</td></tr></table></div><div class="keyword-detail" style="margin-top:8px">서브쿼리: D='k'인 R2의 C값→{x,z}. 메인쿼리: R1에서 C IN(x,z)인 B→a(C=x), c(C=z), d(C=x)</div>` },
+    qHtml:`<div class="q-text">다음 두 테이블에 대해 SQL문을 실행하였을 때, 나타나는 결과를 작성하시오. (속성명 + 값 출력)<br><br><div class="sql-box">SELECT B
+FROM R1
+WHERE C IN (SELECT C FROM R2 WHERE D = \'k\');</div><br><div class="tables-row"><div><div class="tbl-label">[ R1 ]</div><table class="db-table"><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>1</td><td>a</td><td>x</td></tr><tr><td>2</td><td>b</td><td>x</td></tr><tr><td>1</td><td>c</td><td>w</td></tr><tr><td>3</td><td>d</td><td>w</td></tr></table></div><div><div class="tbl-label">[ R2 ]</div><table class="db-table"><tr><th>C</th><th>D</th><th>E</th></tr><tr><td>x</td><td>k</td><td>3</td></tr><tr><td>y</td><td>k</td><td>3</td></tr><tr><td>z</td><td>s</td><td>2</td></tr></table></div></div>`,
+    ansHtml:`<div class="tbl-wrap"><table class="db-table"><tr><th>B</th></tr><tr class="highlight-row"><td>a</td></tr><tr class="highlight-row"><td>b</td></tr></table></div><div class="keyword-detail" style="margin-top:8px">서브쿼리: D=\'k\'인 R2의 C값 → {x, y}. 메인쿼리: R1에서 C IN(x,y)인 행 → A=1(C=x, B=a), A=2(C=x, B=b) → 결과 B: a, b</div>` },
   { id:'24_1_10', year:'2024', round:'1회', cat:'SQL문',
-    qHtml:`<div class="q-text">아래 TABLE을 참고하여 다음 SQL의 실행 결과값을 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>EMPNO</th><th>NAME</th><th>SAL</th></tr><tr><td>100</td><td>홍길동</td><td>2000</td></tr><tr><td>150</td><td>이순신</td><td>3500</td></tr><tr><td>200</td><td>강감찬</td><td>2500</td></tr><tr><td>250</td><td>김유신</td><td>4000</td></tr></table></div><div class="sql-box">SELECT COUNT(*)
-FROM TABLE
-WHERE EMPNO > 100
-  AND SAL >= 3000
-  OR EMPNO = 200</div>`,
-    ansHtml:`<div class="answer-val">복원 기준 정답: 1 (SQL 연산자 우선순위 적용 시: 3)</div><div class="tbl-wrap" style="margin-top:8px"><div class="tbl-label">AND 우선 적용: (EMPNO>100 AND SAL>=3000) OR EMPNO=200</div><table class="db-table"><tr><th>EMPNO</th><th>SAL</th><th>결과</th></tr><tr class="fail-row"><td>100</td><td>2000</td><td>✗</td></tr><tr class="highlight-row"><td>150</td><td>3500</td><td>✓</td></tr><tr class="highlight-row"><td>200</td><td>2500</td><td>✓ (EMPNO=200)</td></tr><tr class="highlight-row"><td>250</td><td>4000</td><td>✓</td></tr></table></div><div class="keyword-detail" style="margin-top:8px">AND 우선순위 > OR. SQL 기준: 3개 해당(150, 200, 250). 복원 문제는 1로 기재.</div>` },
+    qHtml:`<div class="q-text">다음 테이블에 대해 SQL문을 실행하였을 때, 나타나는 결과를 작성하시오.<br><br><div class="tables-row"><div><table class="db-table"><tr><th>EMPNO</th><th>SAL</th></tr><tr><td>100</td><td>1000</td></tr><tr><td>200</td><td>3000</td></tr><tr><td>300</td><td>1500</td></tr></table></div><div><div class="sql-box">SELECT COUNT(*)
+FROM TABLE1
+WHERE EMPNO &gt; 100 AND SAL &gt;= 3000 OR EMPNO = 200;</div></div></div>`,
+    ansHtml:`<div class="answer-val">1</div><div class="tbl-wrap" style="margin-top:8px"><table class="db-table"><tr><th>EMPNO</th><th>SAL</th><th>조건 충족</th></tr><tr class="fail-row"><td>100</td><td>1000</td><td>✗</td></tr><tr class="highlight-row"><td>200</td><td>3000</td><td>✓ (EMPNO&gt;100 AND SAL&gt;=3000) AND (EMPNO=200)</td></tr><tr class="fail-row"><td>300</td><td>1500</td><td>✗</td></tr></table></div><div class="keyword-detail" style="margin-top:8px">AND가 OR보다 우선 적용: (EMPNO&gt;100 AND SAL&gt;=3000) OR EMPNO=200. EMPNO=200, SAL=3000 → 두 조건 모두 충족. COUNT(*)=1.</div>` },
   { id:'24_1_11', year:'2024', round:'1회', cat:'기타 용어',
     qHtml:`<div class="q-text">아래에서 설명하는 디자인 패턴의 명칭을 쓰시오.<br><br>· 연관성 있는 여러 종류의 객체들을 묶어 추상화하고, 상황에 따라 구체화된 객체 집합을 일관된 방식으로 생성하는 생성 패턴이다.<br>· 구체적인 클래스에 의존하지 않고 서로 관련된 객체들의 조합을 만드는 인터페이스를 제공한다.<br>· 'Kit'라고도 불리며, 관련 객체군을 일관성 있게 생성할 때 유용하다.</div>`,
     ansHtml:`<div class="answer-val">Abstract Factory (추상 팩토리) 패턴</div><div class="keyword-detail">Abstract Factory: 생성 패턴(GoF). 제품군(Product Family)을 일관성 있게 생성. Factory Method와 달리 여러 종류 제품을 하나의 팩토리에서 생성.</div>` },
@@ -711,8 +792,8 @@ ORDER BY A DESC;</div>`,
 
   // ─── 2023년 2회 ───
   { id:'23_2_1', year:'2023', round:'2회', cat:'SQL문',
-    qHtml:`<div class="q-text">아래 [학생] 테이블을 생성한 후, 다음 조건에 맞게 데이터를 삽입하는 SQL 문을 작성하시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>학번</th><th>이름</th><th>학년</th><th>전공</th><th>전화번호</th></tr><tr class="highlight-row"><td>9830287</td><td>뉴진스</td><td>3</td><td>경영학개론</td><td>010-1234-1234</td></tr></table></div><br>조건: 문자열은 작은따옴표('')로 감싸 작성한다.</div>`,
-    ansHtml:`<div class="answer-val">INSERT INTO 학생(학번, 이름, 학년, 전공, 전화번호)<br>VALUES(9830287, '뉴진스', 3, '경영학개론', '010-1234-1234');</div><div class="keyword-detail">INSERT INTO 테이블명(컬럼목록) VALUES(값목록). 숫자형은 따옴표 없이, 문자형·날짜형은 작은따옴표 사용.</div>` },
+    qHtml:`<div class="q-text">아래 [학생] 테이블에 다음 처리 조건에 맞는 쿼리문을 작성하시오.<br><br><div class="tbl-wrap"><div class="tbl-label">[학생] 테이블</div><table class="db-table"><tr><th>속성명</th><th>데이터 타입</th><th>비고</th></tr><tr><td>학번</td><td>INT</td><td>PRIMARY KEY</td></tr><tr><td>이름</td><td>VARCHAR(20)</td><td></td></tr><tr><td>학년</td><td>INT</td><td></td></tr><tr><td>과목</td><td>VARCHAR(20)</td><td></td></tr><tr><td>연락처</td><td>VARCHAR(20)</td><td></td></tr></table></div><br>· 학번이 1415245, 이름이 \'라이언\', 학년이 2, 과목이 \'수학\', 연락처가 \'010-1234-5678\'인 학생의 정보를 입력<br>· 인용 부호가 필요한 경우 작은따옴표( \' ) 사용<br>· 명령문 마지막 세미콜론(;)은 생략 가능</div>`,
+    ansHtml:`<div class="answer-val">INSERT INTO 학생(학번, 이름, 학년, 과목, 연락처)<br>VALUES(1415245, \'라이언\', 2, \'수학\', \'010-1234-5678\')</div><div class="keyword-detail">INSERT INTO 테이블명(컬럼목록) VALUES(값목록). 숫자형(학번·학년)은 따옴표 없이, 문자형(이름·과목·연락처)은 작은따옴표 사용.</div>` },
   { id:'23_2_2', year:'2023', round:'2회', cat:'SW 개발/계획',
     qHtml:`<div class="q-text">아래는 테스트 커버리지에 대한 설명이다. 보기에서 알맞은 항목을 골라 쓰시오.<br><br>· 프로그램 내 모든 결정 포인트의 각 개별 조건식에 대해 참(True)·거짓(False) 결과를 최소 한 번씩 수행하는 커버리지 기준이다.<br>· True/False에 충분한 영향을 줄 수 없는 경우가 발생할 수 있다는 한계점이 있다.<br><br>[보기] &nbsp; ㄱ.구문 커버리지 &nbsp; ㄴ.경로 커버리지 &nbsp; ㄷ.조건/결정 커버리지 &nbsp; ㄹ.변형 조건/결정 커버리지 &nbsp; ㅂ.다중 조건 커버리지 &nbsp; ㅅ.결정 커버리지 &nbsp; ㅇ.조건 커버리지</div>`,
     ansHtml:`<div class="answer-val">ㅇ. 조건(Condition) 커버리지</div><div class="keyword-detail">조건 커버리지: 각 개별 조건식의 T/F만 보장. 전체 결정식 결과의 양방향은 보장하지 않음. 이 한계를 보완한 것이 MC/DC.</div>` },
@@ -809,10 +890,10 @@ ORDER BY A DESC;</div>`,
     qHtml:`<div class="q-text">아래에서 설명하는 관계 데이터 모델의 용어를 쓰시오.<br><br>· 관계 데이터의 연산을 표현하는 방법으로, 원하는 정보를 계산 수식으로 정의한다.<br>· 수학의 predicate calculus(술어 논리)에 기반을 두고 Codd가 제안하였다.<br>· 원하는 정보가 무엇인지만 정의하는 비절차적 특성을 지니며, 튜플 방식과 도메인 방식이 있다.</div>`,
     ansHtml:`<div class="answer-val">관계해석 (Relational Calculus)</div><div class="keyword-detail">관계해석: 비절차적 언어(What). 관계대수: 절차적 언어(How). SQL은 관계해석과 관계대수 모두를 기반으로 함.</div>` },
   { id:'22_2_2', year:'2022', round:'2회', cat:'SQL문',
-    qHtml:`<div class="q-text">아래 테이블을 참고하여 다음 SQL의 실행 결과를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>col1</th><th>col2</th></tr><tr><td>1</td><td>1</td></tr><tr><td>2</td><td>2</td></tr><tr><td>2</td><td>3</td></tr><tr><td>3</td><td>NULL</td></tr><tr><td>3</td><td>5</td></tr><tr><td>4</td><td>4</td></tr></table></div><div class="sql-box">SELECT COUNT(col2)
+    qHtml:`<div class="q-text">아래 테이블을 참고하여 다음 SQL의 실행 결과를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>Index</th><th>col1</th><th>Col2</th></tr><tr><td>1</td><td>2</td><td>Null</td></tr><tr><td>2</td><td>3</td><td>6</td></tr><tr><td>3</td><td>5</td><td>5</td></tr><tr><td>4</td><td>6</td><td>3</td></tr><tr><td>5</td><td>Null</td><td>3</td></tr></table></div><div class="sql-box">SELECT COUNT(col2)
 FROM TABLE
 WHERE col1 IN (2,3) OR col2 IN (3,5);</div>`,
-    ansHtml:`<div class="answer-val">4</div><div class="keyword-detail">조건 충족 4행(col1=2 2개, col1=3 2개). COUNT(col2): col2=NULL인 행 제외 → 3행. 복원 기준 정답 4.</div>` },
+    ansHtml:`<div class="answer-val">4</div><div class="keyword-detail">WHERE 조건(col1 IN(2,3) OR col2 IN(3,5)) 충족 행: Index 1(col1=2), 2(col1=3), 3(col2=5), 4(col2=3), 5(col2=3) → 5행. COUNT(col2): col2=Null인 Index 1행 제외 → 4.</div>` },
   { id:'22_2_3', year:'2022', round:'2회', cat:'네트워크',
     qHtml:`<div class="q-text">아래에서 설명하는 네트워크 기술의 3글자 영문 약자를 쓰시오.<br><br>· 인터넷을 통해 디바이스 간 사설 네트워크 연결을 생성하여 퍼블릭 네트워크에서 데이터를 안전하게 전송한다.<br>· 사용자 IP 주소를 마스킹하고 데이터를 암호화하여 수신 권한 없는 사람이 읽을 수 없도록 한다.</div>`,
     ansHtml:`<div class="answer-val">VPN (Virtual Private Network)</div><div class="keyword-detail">VPN: 공용망에서 사설망 환경 구현. IPsec, SSL/TLS, L2TP 등의 프로토콜 사용. 터널링 기술 기반.</div>` },
@@ -1086,11 +1167,11 @@ WHERE EMPNO > 100 AND SAL >= 3000 OR EMPNO = 200;</div>`,
 
   // ─── 2020년 1회 ───
   { id:'20_1_1', year:'2020', round:'1회', cat:'SW 개발/계획',
-    qHtml:`<div class="q-text">동일한 테스트 케이스를 반복 적용하면 더 이상 새로운 결함을 발견하지 못하게 되는 테스트 원리의 명칭과 개념을 서술하시오.</div>`,
-    ansHtml:`<div class="answer-val">살충제 패러독스 (Pesticide Paradox): 동일한 테스트를 반복하면 더 이상 새로운 결함이 발견되지 않는 현상</div><div class="keyword-detail">소프트웨어 테스트 7원리 중 하나. 극복 방법: 주기적으로 테스트 케이스를 보완·개선하거나 새로운 시각의 테스터 투입.</div>` },
+    qHtml:`<div class="q-text">동일한 테스트 케이스를 반복 적용하면 더 이상 새로운 결함을 발견하지 못하게 되는 테스트 원리의 명칭을 서술하시오.</div>`,
+    ansHtml:`<div class="answer-val">살충제 패러독스 (Pesticide Paradox)</div><div class="keyword-detail">소프트웨어 테스트 7원리 중 하나. 극복 방법: 주기적으로 테스트 케이스를 보완·개선하거나 새로운 시각의 테스터 투입.</div>` },
   { id:'20_1_2', year:'2020', round:'1회', cat:'기타 용어',
-    qHtml:`<div class="q-text">대규모로 저장된 데이터 안에서 체계적이고 자동적으로 통계적 규칙이나 패턴을 찾아내는 기술의 명칭과 개념을 서술하시오.</div>`,
-    ansHtml:`<div class="answer-val">데이터 마이닝 (Data Mining): 대규모 데이터에서 통계적 규칙이나 패턴을 자동으로 추출하는 기술</div><div class="keyword-detail">데이터 마이닝 기법: 분류(Classification), 군집화(Clustering), 연관 규칙(Association Rule), 회귀(Regression) 등.</div>` },
+    qHtml:`<div class="q-text">대규모로 저장된 데이터 안에서 체계적이고 자동적으로 통계적 규칙이나 패턴을 찾아내는 기술의 명칭을 서술하시오.</div>`,
+    ansHtml:`<div class="answer-val">데이터 마이닝 (Data Mining)</div><div class="keyword-detail">데이터 마이닝 기법: 분류(Classification), 군집화(Clustering), 연관 규칙(Association Rule), 회귀(Regression) 등.</div>` },
   { id:'20_1_3', year:'2020', round:'1회', cat:'네트워크',
     qHtml:`<div class="q-text">프로토콜(Protocol)의 기본 요소 3가지를 쓰시오.</div>`,
     ansHtml:`<div class="answer-val">구문(Syntax), 의미(Semantics), 순서(Timing)</div><div class="keyword-detail">구문: 데이터 형식·부호화. 의미: 오류 제어·조작을 위한 제어 정보. 순서: 통신 속도 조정·메시지 순서 제어.</div>` },
@@ -1101,7 +1182,7 @@ WHERE EMPNO > 100 AND SAL >= 3000 OR EMPNO = 200;</div>`,
     qHtml:`<div class="q-text">속성-값(Attribute-Value) 쌍으로 이루어진 데이터 객체를 전달하기 위한 개방형 표준 포맷으로, AJAX에서 많이 사용되며 XML을 대체하는 주요 데이터 포맷의 영문 약자를 쓰시오.</div>`,
     ansHtml:`<div class="answer-val">JSON (JavaScript Object Notation)</div><div class="keyword-detail">JSON: 가볍고 파싱이 쉬운 데이터 교환 형식. REST API에서 주로 사용. 자료형: string, number, object, array, boolean, null.</div>` },
   { id:'20_1_6', year:'2020', round:'1회', cat:'SQL문',
-    qHtml:`<div class="q-text">STUDENT 테이블에 컴퓨터과 50명, 인터넷과 100명, 사무자동화과 50명의 정보가 있을 때, 각 SQL 실행 결과의 튜플 수를 쓰시오.<br><br><div class="sql-box">1) SELECT DEPT FROM STUDENT;
+    qHtml:`<div class="q-text">STUDENT 테이블에 컴퓨터과 50명, 인터넷과 100명, 사무자동화과 50명의 정보가 있을 때, 각 SQL 실행 결과의 튜플 수를 쓰시오. (단, DEPT 칼럼은 학과명이다)<br><br><div class="sql-box">1) SELECT DEPT FROM STUDENT;
 2) SELECT DISTINCT DEPT FROM STUDENT;
 3) SELECT COUNT(DISTINCT DEPT) FROM STUDENT WHERE DEPT = '컴퓨터과';</div>`,
     ansHtml:`<div class="answer-val">1) 200 &nbsp;&nbsp; 2) 3 &nbsp;&nbsp; 3) 1</div><div class="keyword-detail">1) 전체 200행. 2) DISTINCT 중복 제거 → 3개 학과. 3) '컴퓨터과' 필터 후 DISTINCT DEPT → 1개.</div>` },
@@ -1116,7 +1197,419 @@ WHERE EMPNO > 100 AND SAL >= 3000 OR EMPNO = 200;</div>`,
     ansHtml:`<div class="answer-val">랜드 어택 (Land Attack)</div><div class="keyword-detail">Land Attack: 출발지=목적지 IP로 패킷 전송. 수신 시스템이 응답 루프에 빠져 자원 고갈. DoS 공격의 일종.</div>` },
   { id:'20_1_10', year:'2020', round:'1회', cat:'SW 개발/계획',
     qHtml:`<div class="q-text">공통 모듈 구현에서 모듈 간의 ( ① )은/는 줄이고, ( ② )은/는 높이는 것을 권장한다. ①②에 해당하는 용어를 쓰시오.</div>`,
-    ansHtml:`<div class="answer-val">① 결합도 (Coupling) &nbsp;&nbsp; ② 응집도 (Cohesion)</div><div class="keyword-detail">좋은 모듈: 낮은 결합도(Low Coupling) + 높은 응집도(High Cohesion). 결합도↓=모듈 독립성↑. 응집도↑=단일 책임 원칙 만족.</div>` }
+    ansHtml:`<div class="answer-val">① 결합도 (Coupling) &nbsp;&nbsp; ② 응집도 (Cohesion)</div><div class="keyword-detail">좋은 모듈: 낮은 결합도(Low Coupling) + 높은 응집도(High Cohesion). 결합도↓=모듈 독립성↑. 응집도↑=단일 책임 원칙 만족.</div>` },
+
+  // ─── 2020년 1회 추가 누락 문항 ───
+  { id:'20_1_11', year:'2020', round:'1회', cat:'정보보안',
+    qHtml:`<div class="q-text">아래에서 설명하는 암호화 해시 함수의 명칭을 쓰시오.<br><br>· RFC 1321로 지정되어 있으며, 주로 프로그램이나 파일이 원본 그대로인지 확인하는 무결성 검사에 사용된다.<br>· 1991년 로널드 라이베스트(Ronald Rivest)가 기존 MD4를 대체하기 위해 개발한 128비트 암호화 해시 함수이다.</div>`,
+    ansHtml:`<div class="answer-val">MD5 (Message-Digest Algorithm 5)</div><div class="keyword-detail">MD5: 128비트 해시값 출력. 현재 충돌 취약점 발견으로 보안용으로는 부적합. 무결성 검증·체크섬에 여전히 활용. SHA-256이 보안 대안.</div>` },
+
+  { id:'20_1_12', year:'2020', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래는 릴리스 노트(Release Note)의 작성 항목에 대한 설명이다. 해당하는 항목의 명칭을 쓰시오.<br><br>· 문서 이름(릴리스 노트 이름), 제품 이름, 버전 번호, 릴리스 날짜, 참고 날짜, 노트 버전 등의 정보를 포함한다.</div>`,
+    ansHtml:`<div class="answer-val">헤더 (Header)</div><div class="keyword-detail">릴리스 노트 항목: 헤더 → 개요 → 목적 → 문제 요약 → 재현 항목 → 수정/개선 내용 → 사용자 영향도 → SW지원 영향도 → 노트 → 면책조항 → 연락처</div>` },
+
+  { id:'20_1_13', year:'2020', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래 조건에서 프로젝트 개발 기간(개월)과 계산식을 구하시오.<br><br>· 총 코드 라인 수(LoC): 30,000 라인<br>· 개발자 수: 5명<br>· 개발자 1인당 월평균 개발 라인 수: 300 라인</div>`,
+    ansHtml:`<div class="answer-val">개발 기간: 20개월<br>계산식: (30,000라인 ÷ 300라인) ÷ 5명 = 20개월</div><div class="keyword-detail">LoC(Lines of Code) 기법: 소스 코드 라인 수로 규모 측정. 개발 기간 = 전체 라인 ÷ 1인당 생산성 ÷ 개발자 수.</div>` },
+
+  { id:'20_1_14', year:'2020', round:'1회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">아래에서 설명하는 데이터 모델링 기법의 명칭을 쓰시오.<br><br>· 정규화된 엔티티·속성·관계에 대해 성능 향상과 개발·운영의 단순화를 위해 중복·통합·분리 등을 수행하는 기법이다.<br>· 조회 성능은 향상되지만 데이터 무결성 위험이 증가할 수 있다.</div>`,
+    ansHtml:`<div class="answer-val">비정규화 (De-Normalization) 또는 반정규화</div><div class="keyword-detail">비정규화 방법: 테이블 통합, 테이블 분할, 중복 테이블 추가, 중복 속성 추가. 정규화로 인한 조인 증가를 줄여 성능 개선.</div>` },
+
+  { id:'20_1_15', year:'2020', round:'1회', cat:'네트워크',
+    qHtml:`<div class="q-text">OSI 7계층 중, 0과 1의 비트(bit) 데이터를 전기·광·무선 신호로 변환하여 전송하는 계층의 명칭을 쓰시오.</div>`,
+    ansHtml:`<div class="answer-val">물리 계층 (Physical Layer, 1계층)</div><div class="keyword-detail">물리 계층: 비트 단위 전송. 케이블·리피터·허브 등 장비 사용. 신호 변환·전송 속도·커넥터 규격 정의. 데이터 단위: 비트(Bit).</div>` },
+
+  { id:'20_1_16', year:'2020', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래 표는 애플리케이션 성능 측정 지표이다. (1)~(3)에 해당하는 지표명을 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:400px"><tr><th>지표</th><th>설명</th></tr><tr class="info-row"><td>( ① )</td><td>애플리케이션이 주어진 시간 내에 처리할 수 있는 트랜잭션의 수. 웹 애플리케이션의 경우 시간당 페이지 수로 표현</td></tr><tr class="info-row"><td>( ② )</td><td>사용자 입력이 끝난 후 애플리케이션의 응답 출력이 개시될 때까지의 시간. 메뉴 클릭 시 화면이 나타나기까지 걸리는 시간</td></tr><tr class="info-row"><td>( ③ )</td><td>사용자가 요구를 입력한 시점부터 트랜잭션 처리 후 결과 출력이 완료될 때까지 걸리는 시간</td></tr><tr><td>자원 사용률</td><td>트랜잭션 처리 동안 사용하는 CPU·메모리·네트워크 사용량</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val">① 처리량 (Throughput) &nbsp;&nbsp; ② 응답 시간 (Response Time) &nbsp;&nbsp; ③ 경과 시간 (Turnaround Time)</div><div class="keyword-detail">처리량: 단위 시간당 처리 건수(TPS). 응답 시간: 첫 응답까지의 시간. 경과 시간: 요청~완료까지 전체 시간. 자원 사용률: CPU/메모리/네트워크.</div>` },
+
+  { id:'20_1_17', year:'2020', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래 모듈 관계 다이어그램에서 Fan-in 수가 2 이상인 모듈의 명칭을 모두 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:380px"><tr><th colspan="2">모듈 호출 관계</th></tr><tr><td colspan="2" style="text-align:left;line-height:2">· A → D, A → E, A → F<br>· B → F, B → G<br>· C → F, C → H<br>· D → H<br>· F → H (F도 H를 호출)</td></tr></table></div><div class="q-text" style="margin-top:8px">※ Fan-in: 해당 모듈을 호출하는 상위 모듈의 수</div>`,
+    ansHtml:`<div class="answer-val">F, H</div><div class="keyword-detail">Fan-in: 해당 모듈로 들어오는 화살표 수(호출하는 모듈 수). F는 A·B·C에서 호출(Fan-in=3). H는 C·D·F에서 호출(Fan-in=3). Fan-out: 해당 모듈이 호출하는 모듈 수.</div>` },
+
+  // ─── 2021년 3회 누락 ───
+  { id:'21_3_9', year:'2021', round:'3회', cat:'SQL문',
+    qHtml:`<div class="q-text">데이터베이스에서 사용자에게 접속 권한, 객체 생성 권한, DBA 권한 등을 부여할 때 사용하는 DCL 명령어의 명칭과 기능을 약술하시오.</div>`,
+    ansHtml:`<div class="answer-val">GRANT: 사용자에게 접속 권한, 오브젝트 생성 권한, DBA 권한 등을 부여하는 명령어</div><div class="keyword-detail">DCL(Data Control Language): GRANT(권한 부여), REVOKE(권한 회수). 예) GRANT SELECT ON 테이블 TO 사용자; REVOKE SELECT ON 테이블 FROM 사용자;</div>` },
+
+  // ─── 2021년 2회 누락 ───
+  { id:'21_2_15', year:'2021', round:'2회', cat:'SQL문',
+    qHtml:`<div class="q-text">아래 SQL의 빈칸 ①②를 채우시오.<br><br>· '이름' 컬럼에서 '이'로 시작하는 문자열을 조회하고 결과를 내림차순으로 정렬하는 쿼리이다.<br><br><div class="sql-box">SELECT ... FROM ... WHERE 이름 LIKE ( ① ) ORDER BY 컬럼명 ( ② )</div>`,
+    ansHtml:`<div class="answer-val">① 이% &nbsp;&nbsp; ② DESC</div><div class="keyword-detail">LIKE 와일드카드: %(0개 이상 문자), _(1개 문자). '이%': 이로 시작. '%이': 이로 끝. '%이%': 이 포함. DESC: 내림차순, ASC: 오름차순(기본).</div>` },
+
+  // ─── 2021년 1회 누락 ───
+  { id:'21_1_14', year:'2021', round:'1회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">아래에서 설명하는 데이터 모델링 기법의 명칭을 쓰시오.<br><br>· 정규화된 엔티티·속성·관계에 대해 성능 향상과 개발·운영의 단순화를 위해 중복·통합·분리 등을 수행하는 기법이다.<br>· 방법으로는 테이블 통합, 테이블 분할, 중복 테이블 추가, 중복 속성 추가 등이 있다.</div>`,
+    ansHtml:`<div class="answer-val">비정규화 (De-Normalization) 또는 반정규화</div><div class="keyword-detail">비정규화: 조회 성능 향상을 위해 의도적으로 정규화를 위반하는 기법. 데이터 중복이 증가하므로 무결성 관리에 주의 필요.</div>` },
+
+  { id:'21_1_15', year:'2021', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">블랙박스 테스트 기법에 대한 아래 두 가지 예시를 보고, 해당하는 테스트 기법의 명칭을 각각 쓰시오.<br><br>1. 입력 범위 0 ≤ x ≤ 10일 때 -1, 0, 10, 11 등 경계에 위치한 값을 테스트 케이스로 선정<br>2. 입력 데이터 영역을 유사한 도메인별로 유효값·무효값으로 그룹핑하여 각 그룹의 대표값으로 검사</div>`,
+    ansHtml:`<div class="answer-val">1. 경계값 분석 (Boundary Value Analysis)<br>2. 동등 분할 (Equivalence Partitioning)</div><div class="keyword-detail">경계값 분석: 경계 부근에서 오류 발생 확률이 높다는 원리 활용. 동등 분할: 동일 클래스 내 값은 동일하게 처리된다는 가정. 두 기법은 함께 사용.</div>` },
+
+  { id:'21_1_16', year:'2021', round:'1회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">아래는 데이터 모델의 구성요소에 대한 설명이다. 각 빈칸에 해당하는 구성요소를 쓰시오.<br><br>· ( ① ): 데이터베이스에 저장된 실제 데이터를 처리하는 작업에 대한 명세로, 데이터베이스를 조작하는 기본 도구<br>· ( ② ): 논리 데이터 모델에서 ①을 어떻게 나타낼 것인지 표현하는 요소<br>· ( ③ ): 데이터 무결성 유지를 위한 DB의 보편적 방법으로, 릴레이션의 특정 컬럼에 설정하는 제약 (개체 무결성, 참조 무결성 등)</div>`,
+    ansHtml:`<div class="answer-val">① 연산 (Operation) &nbsp;&nbsp; ② 구조 (Structure) &nbsp;&nbsp; ③ 제약조건 (Constraint)</div><div class="keyword-detail">데이터 모델 3요소: 구조(Structure), 연산(Operation), 제약조건(Constraint). 데이터의 정적 측면(구조), 동적 측면(연산), 규칙(제약조건).</div>` },
+
+  // ─── 2020년 4회 누락 ───
+  { id:'20_4_13', year:'2020', round:'4회', cat:'기타 용어',
+    qHtml:`<div class="q-text">아래에서 설명하는 분산 컴퓨팅 플랫폼의 명칭을 쓰시오.<br><br>· 오픈 소스 기반의 분산 컴퓨팅 플랫폼으로, 일반 PC급 컴퓨터들로 가상화된 대형 스토리지를 형성한다.<br>· 저장된 대용량 데이터 세트를 병렬로 처리할 수 있도록 개발된 자바 소프트웨어 프레임워크이다.<br>· Google, Yahoo 등에 적용된 기술이다.</div>`,
+    ansHtml:`<div class="answer-val">하둡 (Hadoop)</div><div class="keyword-detail">Hadoop: HDFS(분산 파일 시스템)와 MapReduce(분산 처리 엔진)로 구성. 빅데이터 처리의 핵심 플랫폼. Apache 오픈소스 프로젝트.</div>` },
+
+  { id:'20_4_14', year:'2020', round:'4회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">테스트 오라클(Test Oracle)의 유형 중, 특정 몇 개의 입력값에 대해서만 기대하는 결과를 제공하는 오라클의 명칭을 쓰시오.<br><br>· 모든 입력값이 아닌 일부 케이스에 대해서만 결과를 검증하는 방식이다.</div>`,
+    ansHtml:`<div class="answer-val">샘플링 오라클 (Sampling Oracle)</div><div class="keyword-detail">테스트 오라클 유형: 참 오라클(모든 입력 검증), 샘플링 오라클(일부만 검증), 휴리스틱 오라클(샘플링+나머지 추정), 일관성 검사 오라클(변경 전후 비교).</div>` },
+
+  { id:'20_4_15', year:'2020', round:'4회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래 표와 같이 점수 구간별로 성적이 부여될 때 테스트를 수행하고자 한다. 테스트 값 [-10점, 30점, 65점, 75점, 85점, 95점, 110점]을 사용하여 각 구간을 대표하는 값으로 테스트하는 기법의 명칭을 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>점수</th><th>성적</th></tr><tr><td>0 ~ 59</td><td>가</td></tr><tr><td>60 ~ 69</td><td>양</td></tr><tr><td>70 ~ 79</td><td>미</td></tr><tr><td>80 ~ 89</td><td>우</td></tr><tr><td>90 ~ 100</td><td>수</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val">동등 분할 테스트 (Equivalence Partitioning Test)</div><div class="keyword-detail">동등 분할: 입력 도메인을 동치 클래스로 나누어 각 클래스의 대표값 하나로 테스트. 유효 구간(0~100)과 무효 구간(-10, 110)도 포함하여 검증.</div>` },
+
+  // ─── 2020년 3회 누락 ───
+  { id:'20_3_12', year:'2020', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">동치 분할 테스트, 경계값 분석 테스트 등의 종류가 있으며 소프트웨어가 수행할 특정 기능을 알기 위해 각 기능이 완전히 작동되는 것을 입증하는 테스트 기법의 명칭을 쓰시오.</div>`,
+    ansHtml:`<div class="answer-val">블랙박스 테스트 (Black Box Test) 또는 명세 기반 테스트</div><div class="keyword-detail">블랙박스 테스트: 내부 구현을 모르고 입출력 명세만으로 테스트. 종류: 동등 분할, 경계값 분석, 원인-결과 그래프, 오류 예측, 비교 검사.</div>` },
+
+  { id:'20_3_13', year:'2020', round:'3회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">데이터베이스의 구조·제약조건 등의 정보를 담고 있는 기본적인 구조로, 데이터베이스에 어떤 데이터가 어떤 형태로 저장되는지를 정의한 것의 명칭과 개념을 약술하시오.</div>`,
+    ansHtml:`<div class="answer-val">스키마 (Schema): 데이터베이스의 구조, 제약조건 등의 정보를 담고 있는 기본적인 구조</div><div class="keyword-detail">스키마 3계층: 외부 스키마(사용자 관점), 개념 스키마(논리 구조, 1개만 존재), 내부 스키마(물리적 저장 구조).</div>` },
+
+  { id:'20_3_14', year:'2020', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래는 UI 설계 원칙의 4가지 특성이다. 빈칸에 들어갈 특성을 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>특성</th><th>설명</th></tr><tr><td>직관성</td><td>누구나 쉽게 이해하고 사용할 수 있어야 한다</td></tr><tr><td>학습성</td><td>누구나 쉽게 배우고 익힐 수 있어야 한다</td></tr><tr><td>유연성</td><td>사용자의 요구사항을 최대한 수용하며 오류를 최소화해야 한다</td></tr><tr class="info-row"><td>( ? )</td><td>사용자의 목적을 정확하고 완벽하게 달성할 수 있도록 제작해야 한다</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val">유효성 (Effectiveness)</div><div class="keyword-detail">UI 설계 4원칙: 직관성(Intuitiveness), 유효성(Effectiveness), 학습성(Learnability), 유연성(Flexibility). 사용성(Usability)의 핵심 구성요소.</div>` },
+
+  { id:'20_3_15', year:'2020', round:'3회', cat:'기타 용어',
+    qHtml:`<div class="q-text">아래는 기업 내·외부 애플리케이션 통합 솔루션(EAI)의 구축 유형에 대한 설명이다. 빈칸 ①②에 해당하는 유형명을 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:360px"><tr><th>유형</th><th>설명</th></tr><tr class="info-row"><td>( ① )</td><td>애플리케이션 사이에 미들웨어를 두어 연계하는 방식. 뛰어난 확장성과 대용량 데이터 처리 가능</td></tr><tr class="info-row"><td>( ② )</td><td>그룹 내에서는 허브 앤 스포크 방식을, 그룹 간에는 메시지 버스 방식을 혼용하는 통합 방식</td></tr><tr><td>포인트 투 포인트</td><td>1:1 단순 통합 방법</td></tr><tr><td>허브 앤 스포크</td><td>단일 허브를 통해 데이터를 전송하는 중앙 집중 방식</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val">① 메시지 버스 (Message Bus)<br>② 하이브리드 (Hybrid)</div><div class="keyword-detail">EAI 4가지 구축 유형: Point-to-Point, Hub & Spoke, Message Bus(ESB 기반), Hybrid. 현재는 ESB(Enterprise Service Bus)로 발전.</div>` },
+
+  { id:'20_3_16', year:'2020', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래에서 설명하는 프로그래밍 개념의 명칭을 쓰시오.<br><br>· C++ 등 객체지향 언어에서 해당 클래스의 객체가 생성될 때 자동으로 호출되는 특수한 종류의 메서드이다.<br>· 객체의 초기화(멤버 변수 설정 등)를 담당하며, 클래스 이름과 동일한 이름을 가진다.</div>`,
+    ansHtml:`<div class="answer-val">생성자 (Constructor)</div><div class="keyword-detail">생성자: 객체 생성 시 자동 호출. 반환값 없음. 오버로딩 가능. 소멸자(Destructor): 객체 소멸 시 자동 호출. Java에서는 GC가 처리.</div>` },
+
+  // ─── 2020년 2회 누락 ───
+  { id:'20_2_12', year:'2020', round:'2회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">소스 코드를 실행하지 않고, 코딩 표준·코딩 스타일·코드 복잡도 및 잠재 결함을 발견하기 위해 사용하는 소프트웨어 분석 도구의 명칭을 쓰시오.</div>`,
+    ansHtml:`<div class="answer-val">정적 분석 도구 (Static Analysis Tool)</div><div class="keyword-detail">정적 분석: 실행 없이 코드 검사. 도구: SonarQube, PMD, FindBugs. 동적 분석: 실행 중 검사(Valgrind, JProfiler). 두 방식 상호 보완.</div>` },
+
+  { id:'20_2_13', year:'2020', round:'2회', cat:'운영체제',
+    qHtml:`<div class="q-text">아래에서 설명하는 모바일 운영체제의 명칭을 쓰시오.<br><br>· Linux 운영체제 위에서 구동하는 모바일 운영체제이다.<br>· 휴대폰을 비롯한 휴대용 장치를 위한 OS·미들웨어·UI·표준 애플리케이션을 포함하는 소프트웨어 스택이다.<br>· 개발자가 Java·Kotlin으로 앱을 개발할 수 있으며, 컴파일된 바이트 코드를 구동하는 런타임 라이브러리를 제공한다.</div>`,
+    ansHtml:`<div class="answer-val">안드로이드 (Android)</div><div class="keyword-detail">Android: Google이 주도하는 오픈소스 모바일 OS. Dalvik VM → ART(Android Runtime)으로 발전. 앱 개발 언어: Java, Kotlin.</div>` },
+
+  { id:'20_2_14', year:'2020', round:'2회', cat:'네트워크',
+    qHtml:`<div class="q-text">아래에서 설명하는 웹 서비스 프로토콜의 명칭을 쓰시오.<br><br>· HTTP, HTTPS, SMTP를 통해 XML 기반의 데이터를 주고받는 프로토콜이다.<br>· 웹 서비스 방식에서 HTTP 기반으로 사용되어 송수신하며, RESTful 프로토콜로 대체할 수 있다.</div>`,
+    ansHtml:`<div class="answer-val">SOAP (Simple Object Access Protocol)</div><div class="keyword-detail">SOAP: XML 기반 메시지 프로토콜. WSDL로 인터페이스 기술, UDDI로 서비스 검색. REST보다 무겁지만 보안·트랜잭션 기능이 강함.</div>` },
+
+  { id:'20_2_15', year:'2020', round:'2회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래는 UI 설계 원칙의 특성이다. 빈칸에 들어갈 특성을 쓰시오.<br><br>· 직관성: 누구나 쉽게 이해하고 사용할 수 있어야 한다<br>· 학습성: 누구나 쉽게 배우고 익힐 수 있어야 한다<br>· 유연성: 사용자의 요구사항을 최대한 수용하며 오류를 최소화해야 한다<br>· ( ? ): 정확하고 완벽하게 사용자의 목표가 달성될 수 있도록 제작되어야 한다</div>`,
+    ansHtml:`<div class="answer-val">유효성 (Effectiveness)</div><div class="keyword-detail">UI 설계 4원칙: 직관성·유효성·학습성·유연성. 유효성은 사용자가 원하는 작업을 정확하게 완수할 수 있는지를 나타내는 특성.</div>` },
+
+  { id:'20_2_16', year:'2020', round:'2회', cat:'기타 용어',
+    qHtml:`<div class="q-text">아래에서 설명하는 기술의 명칭을 영문 약자로 쓰시오.<br><br>· Link Data(링크 데이터)와 Open Data(공개 데이터)의 합성어이다.<br>· 전 세계에 공개된 정보를 하나로 묶어 누구나 활용할 수 있도록 연결하는 방식이다.</div>`,
+    ansHtml:`<div class="answer-val">LOD (Linked Open Data)</div><div class="keyword-detail">LOD: 웹에 공개된 데이터를 URI로 식별하고 RDF 형식으로 연결하는 시맨틱 웹 기술. DBpedia, Wikidata 등이 대표적 사례.</div>` },
+
+  { id:'20_2_17', year:'2020', round:'2회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">아래는 데이터 모델링 절차이다. 보기에서 알맞은 단계를 골라 빈칸을 채우시오.<br><br>요구사항 분석 → ( ① ) → ( ② ) → ( ③ )<br><br>[보기] &nbsp; 물리적 데이터 모델링 &nbsp; 개념적 데이터 모델링 &nbsp; 논리적 데이터 모델링</div>`,
+    ansHtml:`<div class="answer-val">① 개념적 데이터 모델링 &nbsp;&nbsp; ② 논리적 데이터 모델링 &nbsp;&nbsp; ③ 물리적 데이터 모델링</div><div class="keyword-detail">DB 설계 절차: 요구사항 분석 → 개념적 설계(ERD) → 논리적 설계(릴레이션 스키마·정규화) → 물리적 설계(저장 구조·인덱스) → 구현.</div>` },
+
+  // ─── 2023년 1회 누락 ───
+  { id:'23_1_11', year:'2023', round:'1회', cat:'네트워크',
+    qHtml:`<div class="q-text">아래에서 설명하는 프로토콜의 영문 약자를 쓰시오.<br><br>· TCP/IP에서 IP 패킷을 처리할 때 발생하는 문제를 알려주는 프로토콜이다.<br>· 다른 호스트나 게이트웨이 연결에 문제가 있는지 확인하는 목적으로 주로 사용된다.<br>· 이 프로토콜을 이용한 공격으로 ping 명령을 통해 패킷을 연속으로 보내 서버를 마비시키는 Flooding 공격이 있다.</div>`,
+    ansHtml:`<div class="answer-val">ICMP (Internet Control Message Protocol)</div><div class="keyword-detail">ICMP: IP 오류 보고·제어 메시지 전달. ping 명령이 ICMP Echo Request/Reply 사용. Ping Flooding, Smurf 공격에 악용. ICMP Redirect 공격에도 활용.</div>` },
+
+  { id:'23_1_12', year:'2023', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래 제어 흐름 그래프에서 분기 커버리지(Branch Coverage)를 만족하기 위한 테스팅 순서를 두 가지 쓰시오.<br><br><div style="display:flex;justify-content:center;margin:12px 0"><svg viewBox="0 0 400 590" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px">
+<defs>
+  <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#4a7eba"/>
+  </marker>
+</defs>
+
+<!-- 엣지 스타일 -->
+<!-- ① POINTER=FALSE -->
+<rect x="115" y="22" width="145" height="38" rx="5" fill="#5b9bd5"/>
+<text x="187" y="36" text-anchor="middle" fill="white" font-size="11" font-family="monospace" font-weight="bold">POINTER =</text>
+<text x="187" y="51" text-anchor="middle" fill="white" font-size="11" font-family="monospace" font-weight="bold">FALSE</text>
+<!-- ① 번호 원: 흰색 원 + 진한 숫자 -->
+<circle cx="270" cy="30" r="12" fill="white" stroke="#2e75b6" stroke-width="2"/>
+<text x="270" y="35" text-anchor="middle" fill="#1a5fa8" font-size="12" font-weight="bold">1</text>
+
+<!-- ①→② -->
+<line x1="187" y1="60" x2="187" y2="92" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#arr2)"/>
+
+<!-- ② X>K? 마름모 -->
+<polygon points="187,96 255,128 187,160 119,128" fill="#5b9bd5"/>
+<text x="187" y="123" text-anchor="middle" fill="white" font-size="11" font-family="monospace" font-weight="bold">X &gt; K ?</text>
+<circle cx="270" cy="105" r="12" fill="white" stroke="#2e75b6" stroke-width="2"/>
+<text x="270" y="110" text-anchor="middle" fill="#1a5fa8" font-size="12" font-weight="bold">2</text>
+
+<!-- YES: ②→③ -->
+<line x1="255" y1="128" x2="315" y2="128" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#arr2)"/>
+<text x="283" y="120" text-anchor="middle" fill="#333" font-size="10">YES</text>
+
+<!-- ③ POINTER=TRUE -->
+<rect x="315" y="109" width="72" height="38" rx="5" fill="#5b9bd5"/>
+<text x="351" y="124" text-anchor="middle" fill="white" font-size="10" font-family="monospace" font-weight="bold">POINTER</text>
+<text x="351" y="139" text-anchor="middle" fill="white" font-size="10" font-family="monospace" font-weight="bold">= TRUE</text>
+<circle cx="315" cy="100" r="12" fill="white" stroke="#2e75b6" stroke-width="2"/>
+<text x="315" y="105" text-anchor="middle" fill="#1a5fa8" font-size="12" font-weight="bold">3</text>
+
+<!-- ③→② 위로 루프백 -->
+<path d="M351,109 L351,80 L255,80 L255,112" stroke="#4a7eba" stroke-width="1.8" fill="none" marker-end="url(#arr2)"/>
+
+<!-- NO: ②→④ -->
+<line x1="187" y1="160" x2="187" y2="198" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#arr2)"/>
+
+<!-- ④ X=X+2 -->
+<rect x="115" y="200" width="145" height="38" rx="5" fill="#5b9bd5"/>
+<text x="187" y="224" text-anchor="middle" fill="white" font-size="11" font-family="monospace" font-weight="bold">X = X + 2</text>
+<circle cx="270" cy="208" r="12" fill="white" stroke="#2e75b6" stroke-width="2"/>
+<text x="270" y="213" text-anchor="middle" fill="#1a5fa8" font-size="12" font-weight="bold">4</text>
+
+<!-- ④→⑤ -->
+<line x1="187" y1="238" x2="187" y2="278" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#arr2)"/>
+
+<!-- ⑤ CALL SUB -->
+<rect x="115" y="280" width="145" height="48" rx="5" fill="#5b9bd5"/>
+<text x="187" y="300" text-anchor="middle" fill="white" font-size="10" font-family="monospace" font-weight="bold">CALL SUB(X,</text>
+<text x="187" y="318" text-anchor="middle" fill="white" font-size="10" font-family="monospace" font-weight="bold">POINTER, RESULT)</text>
+<circle cx="270" cy="288" r="12" fill="white" stroke="#2e75b6" stroke-width="2"/>
+<text x="270" y="293" text-anchor="middle" fill="#1a5fa8" font-size="12" font-weight="bold">5</text>
+
+<!-- ⑤→⑥ -->
+<line x1="187" y1="328" x2="187" y2="368" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#arr2)"/>
+
+<!-- ⑥ RESULT>1? 마름모 -->
+<polygon points="187,372 255,404 187,436 119,404" fill="#5b9bd5"/>
+<text x="187" y="399" text-anchor="middle" fill="white" font-size="11" font-family="monospace" font-weight="bold">RESULT</text>
+<text x="187" y="414" text-anchor="middle" fill="white" font-size="11" font-family="monospace" font-weight="bold">&gt; 1 ?</text>
+<circle cx="270" cy="381" r="12" fill="white" stroke="#2e75b6" stroke-width="2"/>
+<text x="270" y="386" text-anchor="middle" fill="#1a5fa8" font-size="12" font-weight="bold">6</text>
+
+<!-- NO: ⑥→⑦ -->
+<line x1="255" y1="404" x2="315" y2="404" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#arr2)"/>
+<text x="283" y="396" text-anchor="middle" fill="#333" font-size="10">NO</text>
+
+<!-- ⑦ PRINT RESULT -->
+<rect x="315" y="385" width="72" height="38" rx="5" fill="#5b9bd5"/>
+<text x="351" y="400" text-anchor="middle" fill="white" font-size="10" font-family="monospace" font-weight="bold">PRINT</text>
+<text x="351" y="415" text-anchor="middle" fill="white" font-size="10" font-family="monospace" font-weight="bold">RESULT</text>
+<circle cx="315" cy="376" r="12" fill="white" stroke="#2e75b6" stroke-width="2"/>
+<text x="315" y="381" text-anchor="middle" fill="#1a5fa8" font-size="12" font-weight="bold">7</text>
+
+<!-- YES: ⑥→① 왼쪽 루프백 -->
+<path d="M119,404 L55,404 L55,41 L113,41" stroke="#4a7eba" stroke-width="1.8" fill="none" marker-end="url(#arr2)"/>
+<text x="76" y="470" text-anchor="middle" fill="#333" font-size="10">YES</text>
+</svg></div>`,
+    ansHtml:`<div class="answer-val">경로1: 1→2→3→4→5→6→1<br>경로2: 1→2→4→5→6→7<br>(또는 1234567, 124561)</div><div class="keyword-detail">분기(결정) 커버리지: 모든 분기의 참·거짓을 최소 1회 수행. 두 경로로 두 분기의 참·거짓 모두 커버.</div>` },
+
+  { id:'23_1_13', year:'2023', round:'1회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">아래에서 설명하는 데이터 모델링 기법의 명칭을 쓰시오.<br><br>· 정규화된 엔티티·속성·관계에 대해 성능 향상과 개발·운영의 단순화를 위해 중복·통합·분리 등을 수행하는 기법이다.<br>· 조회 성능은 향상되나, 데이터 중복으로 무결성 위험이 증가할 수 있다.</div>`,
+    ansHtml:`<div class="answer-val">비정규화 (De-Normalization) 또는 반정규화</div><div class="keyword-detail">비정규화 방법: 테이블 통합·분할, 중복 테이블·속성 추가. 정규화로 인한 과도한 조인을 줄여 성능 개선. 단, 무결성 위반 위험 증가.</div>` },
+
+  // ─── 2022년 3회 누락 ───
+  { id:'22_3_11', year:'2022', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래 표를 확인하여 해당하는 테스트 기법을 보기에서 고르시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:360px"><tr><th>입력 구간</th><th>테스트 케이스 (경계 포함)</th></tr><tr><td>구간 A (0~10)</td><td>-1, 0, 1, 9, 10, 11</td></tr><tr><td>구간 B (11~20)</td><td>10, 11, 12, 19, 20, 21</td></tr></table></div><div class="q-text" style="margin-top:8px">· 입력 조건의 중간값보다 경계값에서 오류가 발생될 확률이 높다는 점을 이용하여 경계값을 테스트 케이스로 선정<br>[보기] &nbsp; 동등 분할 테스트 &nbsp; 결정 테이블 테스트 &nbsp; 경곗값 분석 테스트 &nbsp; 분류 트리 테스트 &nbsp; 상태 전이 테스트 &nbsp; 오류 예측 테스트 &nbsp; 유스케이스 테스트</div>`,
+    ansHtml:`<div class="answer-val">경곗값 분석 테스트 (Boundary Value Analysis)</div><div class="keyword-detail">경곗값 분석: 동치 분할 기법을 보완. 각 구간의 최솟값-1, 최솟값, 최솟값+1, 최댓값-1, 최댓값, 최댓값+1 등을 테스트 케이스로 선정.</div>` },
+
+  { id:'22_3_12', year:'2022', round:'3회', cat:'정보보안',
+    qHtml:`<div class="q-text">아래에서 설명하는 두 가지 보안 기술의 명칭을 각각 쓰시오.<br><br>(1) 프로세서(Processor) 내부에 독립적인 보안 구역을 별도로 두어 중요한 정보를 보호하는 ARM사에서 개발한 하드웨어 기반의 보안 기술<br><br>(2) 사용자들이 사이트에 접속할 때 주소를 잘못 입력하거나 철자를 빠뜨리는 실수를 이용하기 위해 유사한 유명 도메인을 미리 등록하는 행위로, URL 하이재킹(URL Hijacking)이라고도 함</div>`,
+    ansHtml:`<div class="answer-val">(1) Trustzone<br>(2) 타이포스쿼팅 (Typosquatting)</div><div class="keyword-detail">Trustzone: ARM의 하드웨어 보안 기술. 일반 영역(Normal World)과 보안 영역(Secure World) 분리. 타이포스쿼팅: google.com → gooogle.com 등 오타 도메인 선점.</div>` },
+
+  { id:'22_3_13', year:'2022', round:'3회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">아래는 E-R 다이어그램(개체-관계 다이어그램) 기호에 대한 설명이다. 각 설명에 해당하는 항목의 명칭을 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:360px"><tr><th>기호/관계</th><th>설명</th></tr><tr class="info-row"><td>( ① )</td><td>개체집합-관계집합 연결에 사용하는 선</td></tr><tr class="info-row"><td>( ② )</td><td>개체 집합과의 연결에 사용하는 요소</td></tr><tr class="info-row"><td>( ③ )</td><td>관계집합-관계집합의 속성 연결에 사용하는 선</td></tr><tr class="info-row"><td>( ④ )</td><td>두 개체집합 관계에서 생성되는 값을 저장하는 속성</td></tr><tr class="info-row"><td>( ⑤ )</td><td>같은 속성을 공유하는 개체들의 모임</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val">① 실선 &nbsp;&nbsp; ② 관계집합 &nbsp;&nbsp; ③ 점선 &nbsp;&nbsp; ④ 관계집합의 속성 &nbsp;&nbsp; ⑤ 개체집합</div><div class="keyword-detail">E-R 다이어그램: 사각형=개체, 타원=속성, 마름모=관계, 실선=개체-관계 연결, 점선=관계-속성 연결.</div>` },
+
+  // ─── 2022년 2회 누락 ───
+  { id:'22_2_10', year:'2022', round:'2회', cat:'SQL문',
+    qHtml:`<div class="q-text">아래 [제품] 테이블에서 H회사의 전체 제품 단가보다 큰 제품을 출력하고자 한다. 괄호 안에 들어갈 알맞은 키워드를 쓰시오.<br><br><div class="tbl-wrap"><div class="tbl-label">[제품] 테이블</div><table class="db-table"><tr><th>제조사</th><th>제품명</th><th>단가</th></tr><tr><td>A</td><td>과자</td><td>1,000</td></tr><tr><td>B</td><td>초콜릿</td><td>6,000</td></tr><tr><td>H</td><td>사탕</td><td>2,000</td></tr><tr><td>C</td><td>아이스크림</td><td>5,000</td></tr><tr><td>H</td><td>사탕</td><td>3,000</td></tr></table></div><div class="sql-box" style="margin-top:12px">SELECT 제조사, 제품명, 단가
+FROM 제품
+WHERE 단가 > ( ) (SELECT 단가 FROM 제품 WHERE 제조사 = 'H');</div><div class="q-text" style="margin-top:8px">※ H회사 제품이 여러 개이고, 그 중 가장 큰 단가보다 큰 제품을 모두 출력해야 한다.</div>`,
+    ansHtml:`<div class="answer-val">ALL</div><div class="keyword-detail">ALL: 서브쿼리의 모든 결과값보다 크거나 작아야 할 때 사용. ANY/SOME: 하나라도 만족하면 참. &gt;ALL은 MAX()와 동일, &lt;ALL은 MIN()과 동일.</div>` },
+
+  { id:'22_2_11', year:'2022', round:'2회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래에서 설명하는 객체지향 설계 원칙(SOLID)의 명칭을 쓰시오.<br><br>· 클라이언트가 자신이 이용하지 않는 메서드에 의존하지 않아야 한다는 원칙이다.<br>· 큰 덩어리의 인터페이스를 구체적이고 작은 단위들로 분리시킴으로써 클라이언트들이 꼭 필요한 메서드만 이용할 수 있게 한다.<br>· 예: 복합기의 프린터·복사기·팩스 기능을 하나의 인터페이스로 묶으면, 일부 기능만 변경 시 전체 재컴파일이 필요해지는 문제 발생 → 이 원칙으로 해결</div>`,
+    ansHtml:`<div class="answer-val">ISP (Interface Segregation Principle, 인터페이스 분리 원칙)</div><div class="keyword-detail">SOLID 5원칙: SRP(단일책임), OCP(개방-폐쇄), LSP(리스코프치환), ISP(인터페이스분리), DIP(의존역전). ISP: 인터페이스를 작게 분리하여 불필요한 의존성 제거.</div>` },
+
+  { id:'22_2_12', year:'2022', round:'2회', cat:'네트워크',
+    qHtml:`<div class="q-text">아래 조건에서 각 답을 구하시오.<br><br>· IP 주소: 139.127.19.132<br>· 서브넷 마스크: 255.255.255.192<br><br>(1) 네트워크 주소: 139.127.19.( ? ) (10진수 표기)<br>(2) 해당 네트워크에서 네트워크 주소와 브로드캐스트 주소를 제외한 사용 가능한 호스트 개수</div>`,
+    ansHtml:`<div class="answer-val">(1) 128 &nbsp;&nbsp;&nbsp; (2) 62개</div><div class="keyword-detail">/26(255.255.255.192): 64개 주소. 네트워크 주소=.128, 브로드캐스트=.191. 호스트=64-2=62. 132는 .128~.191 범위에 속함.</div>` },
+
+  { id:'22_2_13', year:'2022', round:'2회', cat:'데이터베이스',
+    qHtml:`<div class="q-text">아래 [employee] 테이블에서 πTTL(employee) 연산을 실행한 결과를 작성하시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>이름</th><th>TTL</th><th>부서</th></tr><tr><td>홍길동</td><td>부장</td><td>영업</td></tr><tr><td>이순신</td><td>대리</td><td>개발</td></tr><tr><td>김철수</td><td>과장</td><td>영업</td></tr><tr><td>박영희</td><td>차장</td><td>개발</td></tr><tr><td>최민준</td><td>부장</td><td>인사</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val"><div class="tbl-wrap"><table class="db-table"><tr><th>TTL</th></tr><tr class="highlight-row"><td>부장</td></tr><tr class="highlight-row"><td>대리</td></tr><tr class="highlight-row"><td>과장</td></tr><tr class="highlight-row"><td>차장</td></tr></table></div></div><div class="keyword-detail">π(프로젝션): 특정 속성(컬럼)만 추출, 중복 제거. πTTL은 TTL 컬럼만 추출. '부장'이 2개지만 중복 제거 → 4개 행 출력.</div>` },
+
+  // ─── 2022년 1회 누락 ───
+  { id:'22_1_10', year:'2022', round:'1회', cat:'기타 용어',
+    qHtml:`<div class="q-text">아래는 Python 리스트 메서드에 대한 설명이다. 각 설명에 해당하는 메서드명을 쓰시오.<br><br>1. 모든 항목을 하나의 요소로 추가하는 메서드 (iterable의 각 항목을 개별 추가)<br>2. 리스트 내부 요소를 꺼내 반환하고, 해당 요소를 리스트에서 삭제하는 메서드<br>3. 리스트 내부 요소의 순서를 뒤집는 메서드</div>`,
+    ansHtml:`<div class="answer-val">1. extend &nbsp;&nbsp; 2. pop &nbsp;&nbsp; 3. reverse</div><div class="keyword-detail">리스트 메서드: append(단일 추가), extend(iterable 확장), insert(위치 삽입), pop(제거·반환), remove(값으로 제거), reverse(역순), sort(정렬).</div>` },
+
+  { id:'22_1_11', year:'2022', round:'1회', cat:'정보보안',
+    qHtml:`<div class="q-text">아래에서 설명하는 암호화 프로토콜의 영문 약자를 쓰시오.<br><br>· 임시 키 무결성 프로토콜(Temporal Key Integrity Protocol)의 약자이다.<br>· WEP의 취약점을 보완하기 위해 개발된 무선 LAN 보안 프로토콜로, 매 패킷마다 새로운 암호화 키를 동적으로 생성한다.</div>`,
+    ansHtml:`<div class="answer-val">TKIP (Temporal Key Integrity Protocol)</div><div class="keyword-detail">TKIP: WEP를 대체하기 위해 IEEE 802.11i에서 도입. 동적 키 생성으로 WEP의 정적 키 취약점 보완. 이후 CCMP(AES 기반)로 대체됨.</div>` },
+
+  { id:'22_1_12', year:'2022', round:'1회', cat:'기타 용어',
+    qHtml:`<div class="q-text">아래에서 설명하는 기술의 영문 약자를 쓰시오.<br><br>· 키보드나 마우스와 같은 장치 없이 말·행동·감정과 같은 인간의 자연스러운 표현으로 컴퓨터나 장치를 제어할 수 있는 환경 또는 인터페이스이다.</div>`,
+    ansHtml:`<div class="answer-val">NUI (Natural User Interface)</div><div class="keyword-detail">NUI: 음성 인식(Siri, 빅스비), 제스처 인식(Kinect), 터치 등을 통한 자연스러운 상호작용. CLI→GUI→NUI 순으로 발전.</div>` },
+
+  { id:'22_1_13', year:'2022', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래 보기에서 블랙박스 테스트 기법을 모두 고르시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:360px"><tr><th>기호</th><th>테스트 기법</th></tr><tr><td>ㄱ</td><td>기초 경로 검사 (Base Path Testing)</td></tr><tr><td>ㄴ</td><td>루프 검사 (Loop Testing)</td></tr><tr><td>ㄷ</td><td>동등 분할 기법 (Equivalence Partitioning)</td></tr><tr><td>ㄹ</td><td>경계값 분석 (Boundary Value Analysis)</td></tr><tr><td>ㅁ</td><td>조건 검사 (Condition Testing)</td></tr><tr><td>ㅂ</td><td>오류 예측 검사 (Error Guessing)</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val">ㄷ, ㄹ, ㅂ (동등 분할, 경계값 분석, 오류 예측)</div><div class="keyword-detail">블랙박스(명세 기반): 동등분할·경계값분석·원인결과그래프·오류예측·비교검사. 화이트박스(구조 기반): 기초경로·루프·조건·데이터흐름 검사.</div>` },
+
+  { id:'22_1_14', year:'2022', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래는 V-모델에서 개발 단계와 테스트 단계의 대응 관계이다. 빈칸 ①②③④에 해당하는 테스트 단계를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:360px"><tr><th>개발 단계</th><th>테스트 단계</th></tr><tr><td>세부 설계</td><td class="info-row">( ① )</td></tr><tr><td>아키텍처 설계</td><td class="info-row">( ② )</td></tr><tr><td>시스템 설계</td><td class="info-row">( ③ )</td></tr><tr><td>요구사항 분석</td><td class="info-row">( ④ )</td></tr></table></div>`,
+    ansHtml:`<div class="answer-val">① 단위 테스트 &nbsp;&nbsp; ② 통합 테스트 &nbsp;&nbsp; ③ 시스템 테스트 &nbsp;&nbsp; ④ 인수 테스트</div><div class="keyword-detail">V-모델: 개발(요구분석→시스템설계→아키텍처설계→세부설계→구현)과 테스트(인수→시스템→통합→단위)가 대칭 구조. 각 단계는 대응하는 테스트와 연결.</div>` },
+
+  // ─── 2021년 3회 누락 ───
+  { id:'21_3_10', year:'2021', round:'3회', cat:'SQL문',
+    qHtml:`<div class="q-text">아래는 두 테이블에 대해 SQL CROSS JOIN을 실행한 결과 화면이다. 결과로 출력되는 행(Row)의 수를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>A 테이블 (NAME)</th><th>조건</th></tr><tr><td>Smith</td><td>S로 시작하는 이름</td></tr><tr><td>Scott</td><td>S로 시작하는 이름</td></tr></table></div><div class="tbl-wrap" style="margin-top:8px"><table class="db-table"><tr><th>B 테이블 (NAME)</th><th>조건</th></tr><tr><td>James</td><td>T 포함 이름 아님</td></tr><tr><td>Martin</td><td>T 포함 이름</td></tr><tr><td>Turner</td><td>T 포함 이름</td></tr></table></div><div class="sql-box" style="margin-top:8px">SELECT A.NAME, B.NAME
+FROM 테이블A A, 테이블B B
+WHERE A.NAME LIKE 'S%'
+AND B.NAME LIKE '%T%'</div>`,
+    ansHtml:`<div class="answer-val">4</div><div class="keyword-detail">CROSS JOIN(교차 조인): 두 테이블의 모든 행 조합을 반환. S로 시작하는 이름 2개 × T를 포함하는 이름 2개(Martin, Turner) = 2×2 = 4행.</div>` },
+
+  { id:'21_3_11', year:'2021', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래에서 설명하는 UML 다이어그램의 명칭을 쓰시오.<br><br>· 문제 해결을 위한 도메인 구조를 나타내어, 보이지 않는 도메인 안의 개념과 같은 추상적인 개념을 기술하기 위해 사용한다.<br>· 소프트웨어의 설계 혹은 완성된 소프트웨어의 구현 설명을 목적으로도 사용할 수 있다.<br>· 이 다이어그램의 형식은 클래스(class)를 포함하여 속성(attribute)과 메서드(method)가 있다.</div>`,
+    ansHtml:`<div class="answer-val">클래스 다이어그램 (Class Diagram)</div><div class="keyword-detail">클래스 다이어그램: UML 구조 다이어그램 중 하나. 시스템의 정적 구조를 표현. 클래스·속성·메서드 및 클래스 간 관계(연관·집약·합성·일반화·의존·실체화) 표현.</div>` },
+
+  // ─── 2021년 3회 추가 누락 (이미지 확인분) ───
+  { id:'21_3_12', year:'2021', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래에서 설명하는 GoF 디자인 패턴의 명칭을 영문으로 쓰시오.<br><br>· 생성(Creational) 패턴에 속하는 객체지향 설계 패턴이다.<br>· 객체를 직접 생성하는 코드를 상위 클래스에 두지 않고, 어떤 클래스의 인스턴스를 만들지는 하위 클래스가 결정하도록 위임하는 구조이다.<br>· 이를 통해 상위 클래스는 구체적인 클래스 이름에 의존하지 않아도 된다.</div>`,
+    ansHtml:`<div class="answer-val">Factory Method (팩토리 메서드 패턴)</div><div class="keyword-detail">Factory Method: 생성(Creational) 패턴. 객체 생성 인터페이스는 상위 클래스가 정의하고, 실제 생성은 하위 클래스가 담당. Abstract Factory는 관련된 객체들의 집합을 생성.</div>` },
+
+  { id:'21_3_13', year:'2021', round:'3회', cat:'기타 용어',
+    qHtml:`<div class="q-text">아래는 파일 구조(File Structures)에 대한 설명이다. 괄호 안에 공통으로 들어갈 알맞은 용어를 쓰시오.<br><br>보조기억장치에 레코드를 편성하는 방식 중 하나로, 레코드를 키(Key) 순으로 정렬한 뒤 각 레코드의 키 값만 따로 추출하여 ( )를 별도로 구성한다. 실제 레코드를 조회할 때는 이 ( )가 가리키는 저장 주소를 이용해 해당 레코드에 직접 접근할 수 있다. 파일 접근 방식에는 순차, ( ), 해싱 세 가지가 있다.</div>`,
+    ansHtml:`<div class="answer-val">인덱스 (색인)</div><div class="keyword-detail">파일 구조 3가지: 순차(Sequential) 접근, 인덱스(Index/색인) 접근, 해싱(Hashing) 접근. 인덱스 파일: 키 항목만 모아 별도 구성, 인덱스가 가리키는 주소로 레코드에 직접 접근.</div>` },
+
+  { id:'21_3_14', year:'2021', round:'3회', cat:'기타 용어',
+    qHtml:`<div class="q-text">아래에서 설명하는 사용자 인터페이스의 영문 약자를 쓰시오.<br><br>· 텍스트 기반 명령어 입력 방식에서 발전하여, 그래픽 요소(아이콘·창·버튼 등)를 화면에 표시하고 마우스 등의 포인팅 장치로 선택·클릭하여 작업을 수행하는 환경이다.<br>· 사용자가 컴퓨터와 시각적으로 상호작용할 수 있어 직관적인 조작이 가능하다.<br>· Windows, macOS 등이 대표적인 구현 사례이다.</div>`,
+    ansHtml:`<div class="answer-val">GUI (Graphical User Interface)</div><div class="keyword-detail">UI 유형: CLI(Command Line Interface, 명령어 기반) → GUI(그래픽 기반) → NUI(Natural User Interface, 음성·제스처). GUI는 직관적 조작이 가능하여 현재 가장 보편적으로 사용.</div>` },
+
+  { id:'21_3_15', year:'2021', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래는 소프트웨어 통합 테스트 방식에 대한 설명이다. 빈칸 ①②에 들어갈 알맞은 용어를 쓰시오.<br><br>( ① ) 통합 테스트는 최하위 모듈을 먼저 검증한 후 점차 상위 계층으로 범위를 넓혀가며 테스트를 수행한다. 이때, 아직 구현되지 않은 상위 모듈 대신 호출 역할을 담당하는 임시 모듈인 ( ② )를 사용한다.<br><br>( ② )는 하위 모듈을 실제로 호출하고 결과를 전달받는 역할을 하여, 상위 모듈 없이도 하위 모듈을 독립적으로 검증할 수 있게 해준다.</div>`,
+    ansHtml:`<div class="answer-val">1. 상향식 (Bottom-up)<br>2. 테스트 드라이버 (Test Driver)</div><div class="keyword-detail">상향식 통합: 하위→상위 순서. 드라이버(Driver): 아직 없는 상위 모듈 대체. 하향식 통합: 상위→하위 순서. 스텁(Stub): 아직 없는 하위 모듈 대체.</div>` },
+
+  // ─── 2022년 3회 추가 ───
+  { id:'22_3_14', year:'2022', round:'3회', cat:'SQL문',
+    qHtml:`<div class="q-text">아래와 같이 두 테이블을 생성하고 튜플을 삽입한 후, 1번·2번 SQL문의 실행 결과를 각각 쓰시오.<br><br><div class="sql-box">CREATE TABLE 부서 (
+  부서코드 INT PRIMARY KEY,
+  부서명  VARCHAR(20)
+);
+CREATE TABLE 직원 (
+  직원코드 INT PRIMARY KEY,
+  부서코드 INT,
+  직원명  VARCHAR(20),
+  FOREIGN KEY(부서코드) REFERENCES 부서(부서코드)
+    ON DELETE CASCADE
+);
+
+INSERT INTO 부서 VALUES(10, '영업팀');
+INSERT INTO 부서 VALUES(20, '개발팀');
+INSERT INTO 부서 VALUES(30, '기획팀');
+
+INSERT INTO 직원 VALUES(1000, 10, '오지은');
+INSERT INTO 직원 VALUES(2000, 10, '황나영');
+INSERT INTO 직원 VALUES(3000, 20, '김새희');
+INSERT INTO 직원 VALUES(4000, 20, '이슬기');
+INSERT INTO 직원 VALUES(5000, 20, '성예은');
+INSERT INTO 직원 VALUES(6000, 30, '박서희');
+INSERT INTO 직원 VALUES(7000, 30, '김지현');</div><br><div class="tbl-label" style="font-weight:600;margin-bottom:4px">1번. SQL문</div><div class="sql-box">SELECT DISTINCT COUNT(부서코드) FROM 직원
+WHERE 부서코드 = 20;</div><br><div class="tbl-label" style="font-weight:600;margin-bottom:4px">2번. SQL문</div><div class="sql-box">DELETE FROM 부서 WHERE 부서코드 = 20;
+SELECT DISTINCT COUNT(부서코드) FROM 직원;</div>`,
+    ansHtml:`<div class="answer-val">1번: 3<br>2번: 4</div><div class="keyword-detail">1번: 부서코드=20인 직원(김새희·이슬기·성예은) 3명 → COUNT=3. 2번: ON DELETE CASCADE로 부서코드=20 직원 3명 자동 삭제 → 잔여 직원 4명(오지은·황나영·박서희·김지현) → COUNT=4.</div>` },
+
+  // ─── 2023년 3회 누락 ───
+  { id:'23_3_12', year:'2023', round:'3회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래에서 설명하는 UML 다이어그램의 명칭을 쓰시오.<br><br>· 시스템을 폴더 모양의 패키지 단위로 구분하고, 패키지 간의 의존 관계를 &lt;&lt;import&gt;&gt;·&lt;&lt;access&gt;&gt;·&lt;&lt;merge&gt;&gt; 등의 스테레오타입 표기로 나타낸다.<br>· 클래스·컴포넌트 등을 논리적 그룹으로 묶어 대규모 시스템의 전체 구조와 모듈 간 의존성을 한눈에 파악할 수 있게 해준다.</div>`,
+    ansHtml:`<div class="answer-val">패키지 다이어그램 (Package Diagram)</div><div class="keyword-detail">패키지 다이어그램: UML 구조 다이어그램 중 하나. 폴더 모양 기호 사용. 의존 관계: &lt;&lt;import&gt;&gt;(공개 접근), &lt;&lt;access&gt;&gt;(비공개 접근), &lt;&lt;merge&gt;&gt;(병합). 대규모 시스템 모듈 구조 표현에 사용.</div>` },
+
+  { id:'23_2_10', year:'2023', round:'2회', cat:'네트워크',
+    qHtml:`<div class="q-text">아래는 HDLC 프로토콜의 프레임 유형과 동작 모드에 대한 설명이다. 보기에서 알맞은 답을 골라 각 빈칸을 채우시오.<br><br>· ( ① ) 프레임: 순서 번호(Seq)·응답 번호(Next)·P/F 필드를 가지며, 첫 번째 비트가 0. 실제 데이터 전송을 담당한다.<br>· ( ② ) 프레임: 첫 비트가 1, 두 번째 비트가 0. Type 2비트로 4가지 종류 구분. 데이터 전송이 아닌 응답·흐름 제어를 수행하며, Seq 없이 Next만 존재한다.<br>· ( ③ ) 프레임: 첫 번째·두 번째 비트가 모두 1. 순서 번호 없는 프레임으로, Type 2비트 + Modifier 3비트(총 5비트)로 종류를 구분한다.<br>· ( ④ ) 모드: 두 호스트가 모두 혼합국(combined station)으로 동작하여 양쪽에서 명령과 응답을 자유롭게 전송할 수 있다.<br>· ( ⑤ ) 모드: 비균형 모드로, 주국의 허락 없이 종국에서 데이터를 전송할 수 있다.<br><br>[보기] &nbsp; ㄱ. 연결제어 &nbsp; ㄴ. 감독 &nbsp; ㄷ. 정보 &nbsp; ㄹ. 양방향 응답 &nbsp; ㅁ. 익명 &nbsp; ㅂ. 비번호 &nbsp; ㅅ. 릴레이 &nbsp; ㅇ. 동기균형 &nbsp; ㅈ. 동기응답 &nbsp; ㅊ. 비동기균형 &nbsp; ㅋ. 비동기응답</div>`,
+    ansHtml:`<div class="answer-val">① ㄷ (정보) &nbsp;&nbsp; ② ㄴ (감독) &nbsp;&nbsp; ③ ㅂ (비번호) &nbsp;&nbsp; ④ ㅊ (비동기균형) &nbsp;&nbsp; ⑤ ㅋ (비동기응답)</div><div class="keyword-detail">HDLC 프레임 3종: 정보(I) 프레임(데이터 전송), 감독(S) 프레임(흐름·오류 제어), 비번호(U) 프레임(링크 관리). 동작 모드: 정규응답(NRM)·비동기응답(ARM)·비동기균형(ABM).</div>` },
+
+  // ─── 2023년 2회 추가 ───
+  { id:'23_2_11', year:'2023', round:'2회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">아래는 소프트웨어 테스트에서 사용하는 두 가지 임시 모듈에 대한 설명이다. 1번과 2번에 해당하는 용어를 각각 쓰시오.<br><br>1.<br>· 하향식 통합 테스트 시, 상위 모듈은 존재하지만 아직 구현되지 않은 하위 모듈을 대체하기 위해 임시로 제공되는 모듈이다.<br>· 특정 목적의 소프트웨어를 구현하는 것으로, 컴포넌트를 개발하거나 테스트할 때 활용된다.<br>· 서버-클라이언트 구조에서 서버만 구현된 상태로 테스트하고 싶을 때, 단순히 값만 반환하는 가상의 클라이언트 역할을 수행한다.<br><br>2.<br>· 상향식 통합 테스트 시, 상위 모듈 없이 하위 모듈만 존재하는 상황에서 하위 모듈 실행 중 자료 입출력을 제어하기 위한 제어 모듈(소프트웨어)이다.<br>· 서버-클라이언트 구조에서 클라이언트만 구현된 상태로 테스트하고 싶을 때, 접속·인증 등 간단한 기능만 하는 가상의 서버 역할을 수행한다.</div>`,
+    ansHtml:`<div class="answer-val">1. 스텁 (Stub)<br>2. 드라이버 (Driver)</div><div class="keyword-detail">스텁(Stub): 하향식 통합 시 미구현 하위 모듈 대체. 드라이버(Driver): 상향식 통합 시 미구현 상위 모듈 대체. 둘 다 테스트 하네스(Test Harness)의 구성 요소.</div>` },
+
+  // ─── 2024년 3회 추가 ───
+  { id:'24_3_11', year:'2024', round:'3회', cat:'SQL문',
+    qHtml:`<div class="q-text">다음 SQL 구문의 실행 결과를 작성하시오.<br><br><div class="sql-box">SELECT count(*)
+FROM employee AS e JOIN project AS p ON e.project_id = p.project_id
+WHERE p.name IN (
+    SELECT name FROM project p WHERE p.project_id IN (
+        SELECT project_id FROM employee GROUP BY project_id HAVING count(*) &lt; 2
+    )
+);</div><br><div class="tables-row"><div><div class="tbl-label">[ employee ]</div><table class="db-table"><tr><th>no</th><th>first_name</th><th>last_name</th><th>project_id</th></tr><tr><td>1</td><td>John</td><td>Doe</td><td>10</td></tr><tr><td>2</td><td>Jim</td><td>Carry</td><td>20</td></tr><tr><td>3</td><td>Rachel</td><td>Redmond</td><td>10</td></tr></table></div><div><div class="tbl-label">[ project ]</div><table class="db-table"><tr><th>project_id</th><th>name</th></tr><tr><td>10</td><td>Alpha</td></tr><tr><td>20</td><td>Beta</td></tr><tr><td>10</td><td>Gamma</td></tr></table></div></div>`,
+    ansHtml:`<div class="answer-val">1</div><div class="keyword-detail">① 가장 안쪽: project_id별 직원 수 집계 → count(&lt;2)인 project_id=20(직원 1명). ② 중간: project_id=20인 project name → Beta. ③ 메인: employee JOIN project WHERE name IN('Beta') → Jim(project_id=20) 1행 → count(*)=1.</div>` },
+
+  // ─── 2025년 1회 추가 ───
+  { id:'25_1_11', year:'2025', round:'1회', cat:'SW 개발/계획',
+    qHtml:`<div class="q-text">문장(Statement) 커버리지 테스트를 수행하려 한다. 아래 코드를 참고하여 제어 흐름도 내 ①~⑥ 노드 별 해당되는 코드를 쓰고, 아래 문장 커버리지 순서를 완성하시오.<br><br><div class="sql-box" style="font-family:monospace;font-size:12px">1  int Main(int b[], int m, int x) {
+2      int a = 0;
+3      while (a &lt; m || b[a] &lt; x) {
+4          if (b[a] &lt; 0)
+5              b[a] = -b[a];
+6          a++;
+7      }
+8      return 1;
+9  }</div><br><div style="display:flex;justify-content:center;margin:12px 0"><svg viewBox="0 0 340 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px">
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4a7eba"/></marker></defs>
+
+<!-- ① int a=0 (사각형) -->
+<rect x="120" y="20" width="80" height="36" rx="5" fill="#5b9bd5"/>
+<text x="160" y="43" text-anchor="middle" fill="white" font-size="15" font-weight="bold">①</text>
+
+<!-- ①→② -->
+<line x1="160" y1="56" x2="160" y2="88" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+
+<!-- ② while 조건 (마름모) -->
+<polygon points="160,92 220,122 160,152 100,122" fill="#5b9bd5"/>
+<text x="160" y="128" text-anchor="middle" fill="white" font-size="15" font-weight="bold">②</text>
+
+<!-- ② YES → ③ (아래) -->
+<line x1="160" y1="152" x2="160" y2="184" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+<text x="172" y="172" fill="#333" font-size="10">YES</text>
+
+<!-- ② NO → ⑥ (오른쪽) -->
+<line x1="220" y1="122" x2="300" y2="122" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+<text x="255" y="114" text-anchor="middle" fill="#333" font-size="10">NO</text>
+
+<!-- ⑥ return 1 (사각형, 오른쪽) -->
+<rect x="300" y="104" width="34" height="36" rx="5" fill="#5b9bd5"/>
+<text x="317" y="128" text-anchor="middle" fill="white" font-size="15" font-weight="bold">⑥</text>
+
+<!-- ③ if 조건 (마름모) -->
+<polygon points="160,188 220,218 160,248 100,218" fill="#5b9bd5"/>
+<text x="160" y="224" text-anchor="middle" fill="white" font-size="15" font-weight="bold">③</text>
+
+<!-- ③ YES → ④ (아래) -->
+<line x1="160" y1="248" x2="160" y2="280" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+<text x="172" y="268" fill="#333" font-size="10">YES</text>
+
+<!-- ③ NO → ⑤ (왼쪽으로 빠져서 ⑤로 직접) -->
+<path d="M100,218 L60,218 L60,368 L118,368" stroke="#4a7eba" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<text x="45" y="295" text-anchor="middle" fill="#333" font-size="10">NO</text>
+
+<!-- ④ b[a]=-b[a] (사각형) -->
+<rect x="120" y="282" width="80" height="36" rx="5" fill="#5b9bd5"/>
+<text x="160" y="306" text-anchor="middle" fill="white" font-size="15" font-weight="bold">④</text>
+
+<!-- ④→⑤ -->
+<line x1="160" y1="318" x2="160" y2="350" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+
+<!-- ⑤ a++ (사각형) -->
+<rect x="120" y="352" width="80" height="36" rx="5" fill="#5b9bd5"/>
+<text x="160" y="376" text-anchor="middle" fill="white" font-size="15" font-weight="bold">⑤</text>
+
+<!-- ⑤ → ② 루프백 (오른쪽으로 빠져서 위로) -->
+<path d="M200,370 L260,370 L260,122 L222,122" stroke="#4a7eba" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+
+</svg></div><br>문장 커버리지 순서: 1 → 2 → ( ⑦ )`,
+    ansHtml:`<div class="answer-val">① int a = 0; &nbsp;&nbsp; ② while (a &lt; m || b[a] &lt; x) &nbsp;&nbsp; ③ if (b[a] &lt; 0) &nbsp;&nbsp; ④ b[a] = -b[a]; &nbsp;&nbsp; ⑤ a++; &nbsp;&nbsp; ⑥ return 1;<br>⑦ 3 → 4 → 5 → 2 → 6</div><div class="keyword-detail">문장 커버리지: 모든 실행 가능한 문장을 최소 1회 수행. while 조건 참→if 조건 참→b[a]=-b[a]→a++→while 재진입 거짓→return 1. 경로: 1→2→3→4→5→2→6.</div>` },
+
+  // ─── 2025년 2회 추가 ───
+  { id:'25_2_11', year:'2025', round:'2회', cat:'네트워크',
+    qHtml:`<div class="q-text">아래 조건을 참고하여 빈칸 ①②에 알맞은 값을 각각 구하시오.<br><br>· 특정 호스트의 IP 주소: 223.13.234.132<br>· 적용된 서브넷 마스크: 255.255.255.192<br><br>(1) 위 호스트가 소속된 네트워크의 주소를 구하면 223.13.234.( ① )이다.<br>(2) 해당 서브넷에서 실제로 할당 가능한 호스트의 최대 개수는 ( ② )개이다.<br>※ 네트워크 주소와 브로드캐스트 주소는 호스트 수 계산에서 제외한다.</div>`,
+    ansHtml:`<div class="answer-val">① 128 &nbsp;&nbsp; ② 62</div><div class="keyword-detail">255.255.255.192 = /26 → 블록 크기 64. 132 &amp; 192 = 128 → 네트워크 주소: 223.13.234.128. 브로드캐스트: 223.13.234.191. 사용 가능 호스트: 64 - 2 = 62개.</div>` }
 ];
 
 let allOpen = false;
@@ -1134,155 +1627,133 @@ function getFiltered() {
 }
 
 function updateStats(filtered) {
-  const ids = filtered.map(q => q.id);
-  const s = ids.filter(id => solved.has(id)).length;
-  const t = ids.length;
-  const pct = t ? Math.round(s / t * 100) : 0;
-  document.getElementById('stat-total').textContent = t;
-  document.getElementById('stat-solved').textContent = s;
-  document.getElementById('stat-pct').textContent = pct + '%';
-  document.getElementById('tb-count').textContent = t;
-  document.getElementById('tb-pct').textContent = pct + '%';
-  document.getElementById('progress-fill').style.width = pct + '%';
+  const total = filtered.length;
+  const solvedCount = filtered.filter(q => solved.has(q.id)).length;
+  const pct = total > 0 ? Math.round(solvedCount / total * 100) : 0;
+
+  const elTotal   = document.getElementById('stat-total');
+  const elSolved  = document.getElementById('stat-solved');
+  const elPct     = document.getElementById('stat-pct');
+  const elFill    = document.getElementById('progress-fill');
+  const elTbCount = document.getElementById('tb-count');
+  const elTbPct   = document.getElementById('tb-pct');
+
+  if (elTotal)   elTotal.textContent   = total;
+  if (elSolved)  elSolved.textContent  = solvedCount;
+  if (elPct)     elPct.textContent     = pct + '%';
+  if (elFill)    elFill.style.width    = pct + '%';
+  if (elTbCount) elTbCount.textContent = total;
+  if (elTbPct)   elTbPct.textContent   = pct + '%';
 }
 
-function render() {
+function renderCards(filtered) {
   const container = document.getElementById('cards');
-  const filtered = getFiltered();
   container.innerHTML = '';
-  if (!filtered.length) {
-    container.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div>해당 조건의 문제가 없습니다.</div>';
-    updateStats([]);
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>해당하는 문항이 없습니다.</p></div>';
     return;
   }
-  filtered.forEach(q => {
-    const isOpen = solved.has(q.id) || allOpen;
-    const cls = catClass[q.cat] || 'cat-etc';
+
+  filtered.forEach((q, i) => {
+    const isRevealed = allOpen || solved.has(q.id);
+
     const card = document.createElement('div');
-    card.className = 'card' + (isOpen ? ' revealed' : '');
-    card.innerHTML = `
-      <div class="card-meta">
-        <span class="badge-year">${q.year}년</span>
-        <span class="badge-round">${q.round}</span>
-        <span class="badge-cat ${cls}">${q.cat}</span>
-      </div>
-      ${q.qHtml}
-      <div class="answer-wrap ${isOpen ? 'open' : ''}" id="ans-${q.id}">
-        <div class="answer-label">정답</div>
-        ${q.ansHtml}
-      </div>
-      <div class="toggle-hint" id="btn-${q.id}">${isOpen ? '▲ 접기' : '▼ 정답 보기'}</div>
-    `;
-    card.addEventListener('click', () => toggle(q.id, card));
+    card.className = 'card' + (isRevealed ? ' revealed' : '');
+    card.dataset.id = q.id;
+
+    // 상단 메타 (번호 + 배지)
+    const meta = document.createElement('div');
+    meta.className = 'card-meta';
+    meta.innerHTML = `
+      <span style="font-size:12px;font-weight:700;color:var(--c-text2)">Q${i+1}</span>
+      <span class="badge-year">${q.year}</span>
+      <span class="badge-round">${q.round}</span>
+      <span class="badge-cat ${catClass[q.cat] || ''}">${q.cat}</span>`;
+
+    // 문제 본문
+    const qBody = document.createElement('div');
+    qBody.innerHTML = q.qHtml;
+
+    // 정답 영역
+    const ansWrap = document.createElement('div');
+    ansWrap.className = 'answer-wrap' + (isRevealed ? ' open' : '');
+
+    const ansLabel = document.createElement('div');
+    ansLabel.className = 'answer-label';
+    ansLabel.textContent = '정답';
+
+    const ansBody = document.createElement('div');
+    ansBody.innerHTML = q.ansHtml;
+
+    ansWrap.appendChild(ansLabel);
+    ansWrap.appendChild(ansBody);
+
+    // 토글 힌트
+    const hint = document.createElement('div');
+    hint.className = 'toggle-hint';
+    hint.textContent = isRevealed ? '▲ 정답 닫기' : '▼ 정답 보기';
+
+    // 카드 클릭 → 정답 토글
+    card.addEventListener('click', () => {
+      const open = ansWrap.classList.toggle('open');
+      hint.textContent = open ? '▲ 정답 닫기' : '▼ 정답 보기';
+      if (open) {
+        solved.add(q.id);
+        card.classList.add('revealed');
+      }
+      updateStats(getFiltered());
+    });
+
+    card.appendChild(meta);
+    card.appendChild(qBody);
+    card.appendChild(ansWrap);
+    card.appendChild(hint);
     container.appendChild(card);
   });
-  updateStats(filtered);
 }
 
-function toggle(id, card) {
-  const a = document.getElementById('ans-' + id);
-  const b = document.getElementById('btn-' + id);
-  const open = a.classList.toggle('open');
-  b.textContent = open ? '▲ 접기' : '▼ 정답 보기';
-  if (card) card.classList.toggle('revealed', open);
-  if (open) solved.add(id); else solved.delete(id);
-  updateStats(getFiltered());
+
+function render() {
+  const filtered = getFiltered();
+  updateStats(filtered);
+  renderCards(filtered);
+}
+
+function applyFilter() {
+  solved.clear();
+  render();
+}
+function filterYear(val, el) {
+  document.querySelectorAll('.year-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  curYear = val;
+  solved.clear();
+  render();
+}
+
+function filterRound(val, el) {
+  document.querySelectorAll('#filter-round .tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  curRound = val;
+  solved.clear();
+  render();
+}
+
+function filterCat(val, el) {
+  document.querySelectorAll('#filter-cat .tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  curCat = val;
+  solved.clear();
+  render();
 }
 
 function toggleAll() {
   allOpen = !allOpen;
   const btn = document.getElementById('btn-all');
-  btn.textContent = allOpen ? '▲ 정답 전체 접기' : '▶ 정답 전체 펼치기';
-  btn.classList.toggle('open', allOpen);
-  if (allOpen) getFiltered().forEach(q => solved.add(q.id));
-  else         getFiltered().forEach(q => solved.delete(q.id));
+  btn.textContent = allOpen ? '▶ 정답 전체 닫기' : '▶ 정답 전체 펼치기';
   render();
 }
-
-function filterYear(val, el) {
-  curYear = val;
-  document.querySelectorAll('#filter-year .tag').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  render();
-}
-function filterRound(val, el) {
-  curRound = val;
-  document.querySelectorAll('#filter-round .tag').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  render();
-}
-function filterCat(val, el) {
-  curCat = val;
-  document.querySelectorAll('#filter-cat .tag').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  render();
-}
-
-// ── URL 파라미터 자동 필터링 ──
-(function applyUrlParams() {
-  const params = new URLSearchParams(window.location.search);
-  const yearParam = params.get('year');   // e.g. '2024'
-  const roundParam = params.get('round'); // e.g. '3회'
-  const catParam = params.get('cat');     // e.g. 'SW 개발/계획'
-
-  // curYear / curRound / curCat 에 반영
-  if (yearParam) curYear = yearParam;
-  if (roundParam) curRound = roundParam;
-  if (catParam) curCat = catParam;
-
-  // 파라미터가 있으면 상단 뒤로가기 바 + 필터 정보 칩 삽입
-  if (yearParam || roundParam || catParam) {
-    const filtered = questions.filter(q =>
-      (curYear  === 'all' || q.year  === curYear)  &&
-      (curRound === 'all' || q.round === curRound) &&
-      (curCat   === 'all' || q.cat   === curCat)
-    );
-
-    const backHref = roundParam ? 'by_round.html' : catParam ? 'by_category.html' : 'index.html';
-    const backLabel = roundParam ? '← 회차 목록' : catParam ? '← 키워드 목록' : '← 홈';
-
-    let ctxLabel = '';
-    if (yearParam && roundParam) ctxLabel = `📅 ${yearParam}년 ${roundParam} · ${filtered.length}문항`;
-    else if (yearParam) ctxLabel = `📅 ${yearParam}년 · ${filtered.length}문항`;
-    else if (catParam) ctxLabel = `🏷️ ${catParam} · ${filtered.length}문항`;
-
-    const bar = document.createElement('div');
-    bar.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:1.2rem;flex-wrap:wrap;';
-    bar.innerHTML = `
-      <a href="${backHref}" style="display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:12px;font-weight:500;color:#666;padding:5px 13px;border:1px solid #e5e4df;border-radius:8px;background:#fff;">${backLabel}</a>
-      <span style="font-size:12px;font-weight:600;color:#1B7A5A;background:#E3F4EE;padding:4px 12px;border-radius:20px;">${ctxLabel}</span>
-    `;
-    const pageWrap = document.querySelector('.page-wrap');
-    if (pageWrap) pageWrap.insertBefore(bar, pageWrap.firstChild);
-
-    // 연도 버튼 UI 동기화
-    document.querySelectorAll('.year-tag').forEach(t => {
-      const btnText = t.textContent.trim(); // '2024년', '전체' 등
-      const isMatch = yearParam ? btnText === yearParam + '년' : btnText === '전체';
-      t.classList.toggle('active', isMatch);
-    });
-
-    // 회차 버튼 UI 동기화 (회차 필터행)
-    const roundRow = document.querySelectorAll('.filter-row')[1];
-    if (roundRow) {
-      roundRow.querySelectorAll('.tag').forEach(t => {
-        const btnText = t.textContent.trim();
-        const isMatch = roundParam ? btnText === roundParam : btnText === '전체';
-        t.classList.toggle('active', isMatch);
-      });
-    }
-
-    // 카테고리 버튼 UI 동기화
-    const catRow = document.querySelectorAll('.filter-row')[2];
-    if (catRow) {
-      catRow.querySelectorAll('.tag').forEach(t => {
-        const btnText = t.textContent.trim();
-        const isMatch = catParam ? btnText === catParam : btnText === '전체';
-        t.classList.toggle('active', isMatch);
-      });
-    }
-  }
-})();
 
 render();
 </script>
