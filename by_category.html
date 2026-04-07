@@ -69,7 +69,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   </div>
 
   <div class="cat-grid" id="cat-grid">
-    <!-- 로딩 스켈레톤 -->
     <div class="cat-card" style="height:170px">
       <span class="skel" style="width:36px;height:36px;border-radius:8px"></span>
       <span class="skel" style="width:70%;height:18px"></span>
@@ -87,36 +86,29 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 
 <script src="stats.js"></script>
 <script>
-// 카테고리별 이모티콘·테마색 정의
 var CAT_META = {
-  'SW 개발/계획': { emoji:'⚙️', c:'#4A3FA0', cl:'#ECEAFA' },
-  '정보보안':     { emoji:'🔐', c:'#A0224A', cl:'#FCE8EF' },
+  'SW 개발/계획': { emoji:'⚙️',  c:'#4A3FA0', cl:'#ECEAFA' },
+  '정보보안':     { emoji:'🔐',  c:'#A0224A', cl:'#FCE8EF' },
   '데이터베이스': { emoji:'🗄️', c:'#1558B0', cl:'#E4EDF9' },
-  '네트워크':     { emoji:'🌐', c:'#9A5800', cl:'#FEF3E2' },
-  '기타 용어':    { emoji:'📚', c:'#505050', cl:'#F0EFEB' },
-  'SQL문':        { emoji:'📋', c:'#0F6E56', cl:'#E3F4EE' },
-  '운영체제':     { emoji:'💻', c:'#2A6B28', cl:'#E6F3E5' }
+  '네트워크':     { emoji:'🌐',  c:'#9A5800', cl:'#FEF3E2' },
+  '기타 용어':    { emoji:'📚',  c:'#505050', cl:'#F0EFEB' },
+  'SQL문':        { emoji:'📋',  c:'#0F6E56', cl:'#E3F4EE' },
+  '운영체제':     { emoji:'💻',  c:'#2A6B28', cl:'#E6F3E5' }
 };
-// 카테고리 표시 순서 (출제 많은 순 고정)
 var CAT_ORDER = ['SW 개발/계획','정보보안','데이터베이스','네트워크','기타 용어','SQL문','운영체제'];
 
 QuizStats.load(function(s) {
-  const minY = s.years[0], maxY = s.years[s.years.length-1];
-  const total = s.totalQ;
+  var minY = s.years[0], maxY = s.years[s.years.length - 1];
+  var total = s.totalQ;
 
-  // 헤더 배지
   document.getElementById('header-badge').textContent =
     Object.keys(s.catMap).length + '개 카테고리';
-
-  // 합계 바
   document.getElementById('total-bar-val').textContent =
     total + '문항 · ' + minY + '~' + maxY + '년 전 회차';
 
-  // 카테고리 카드 렌더링
-  const grid = document.getElementById('cat-grid');
+  var grid = document.getElementById('cat-grid');
   grid.innerHTML = '';
 
-  // catMap에 있는 카테고리 중 ORDER 기준으로 정렬, 없으면 뒤에 추가
   var cats = [];
   CAT_ORDER.forEach(function(cat) {
     if (s.catMap[cat]) cats.push(cat);
@@ -126,19 +118,20 @@ QuizStats.load(function(s) {
   });
 
   cats.forEach(function(cat, i) {
-    const count = s.catMap[cat] || 0;
-    const pct   = ((count / total) * 100).toFixed(1);
-    const barW  = Math.max(1, (count / total) * 100).toFixed(1);
-    const meta  = CAT_META[cat] || { emoji:'📌', c:'#888', cl:'#eee' };
-    const isWide = (i === cats.length - 1) && (cats.length % 2 !== 0);
-    const href  = 'quiz.html?cat=' + encodeURIComponent(cat);
+    var count = s.catMap[cat] || 0;
+    var pct   = ((count / total) * 100).toFixed(1);
+    var barW  = Math.max(1, (count / total) * 100).toFixed(1);
+    var meta  = CAT_META[cat] || { emoji:'📌', c:'#888', cl:'#eee' };
+    var isWide = (i === cats.length - 1) && (cats.length % 2 !== 0);
 
-    const card = document.createElement('a');
+    // ✅ 수정 2: cat 파라미터로 quiz.html 이동
+    var href = 'quiz.html?cat=' + encodeURIComponent(cat);
+
+    var card = document.createElement('a');
     card.className = 'cat-card' + (isWide ? ' wide' : '');
     card.href = href;
     card.style.setProperty('--c', meta.c);
     card.style.setProperty('--cl', meta.cl);
-    card.style.animationDelay = (i * 0.06) + 's';
     card.style.animation = 'fadeUp .5s ' + (i * 0.06) + 's ease both';
 
     card.innerHTML =

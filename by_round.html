@@ -27,7 +27,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .year-label::after{content:'';flex:1;height:1px;background:var(--border)}
 .rounds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 /* round card */
-.round-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.2rem 1.1rem 1rem;text-decoration:none;display:flex;flex-direction:column;gap:8px;transition:all .18s ease;position:relative;overflow:hidden;box-shadow:var(--sh-sm)}
+.round-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.2rem 1.1rem 1rem;text-decoration:none;display:flex;flex-direction:column;gap:8px;transition:all .18s ease;position:relative;overflow:hidden;box-shadow:var(--sh-sm);cursor:pointer}
 .round-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .2s ease}
 .round-card:hover{border-color:var(--green-l);box-shadow:var(--sh-md);transform:translateY(-2px)}
 .round-card:hover::after{transform:scaleX(1)}
@@ -37,6 +37,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .round-card.special .round-badge{background:#FEF3E2;color:var(--warm)}
 .round-title{font-size:14px;font-weight:700;color:var(--text-main);letter-spacing:-.02em;line-height:1.3}
 .round-count{font-size:11px;font-weight:600;color:var(--text-sub);display:flex;align-items:center;gap:4px}
+.round-arrow{position:absolute;bottom:12px;right:14px;font-size:14px;color:var(--text-muted);transition:transform .18s,color .18s}
+.round-card:hover .round-arrow{transform:translate(2px,-2px);color:var(--green)}
+.round-card.special:hover .round-arrow{color:var(--warm)}
 /* 로딩 placeholder */
 .placeholder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 .placeholder-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.2rem 1.1rem 1rem;height:110px}
@@ -59,7 +62,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
     <p>연도·회차를 선택하면 해당 회차의 이론 문제만 보입니다.</p>
   </div>
 
-  <!-- JS가 동적으로 채움 -->
   <div id="rounds-container">
     <!-- 로딩 중 스켈레톤 -->
     <div class="year-group">
@@ -78,46 +80,46 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <script src="stats.js"></script>
 <script>
 QuizStats.load(function(s) {
-  // 헤더 배지
   document.getElementById('header-badge').textContent = s.totalRounds + '개 회차';
 
-  const container = document.getElementById('rounds-container');
+  var container = document.getElementById('rounds-container');
   container.innerHTML = '';
 
-  // 연도별 그룹 렌더링 (오름차순)
-  s.years.forEach(function(year, yi) {
-    const rounds = s.yearRounds[year]; // ['1회','2회',...]
+  // 연도 내림차순 (최신 연도가 위로)
+  var years = s.years.slice().reverse();
 
-    const group = document.createElement('div');
+  years.forEach(function(year, yi) {
+    var rounds = s.yearRounds[year];
+
+    var group = document.createElement('div');
     group.className = 'year-group';
     group.style.animationDelay = (yi * 0.06) + 's';
 
-    // 연도 레이블
-    const label = document.createElement('div');
+    var label = document.createElement('div');
     label.className = 'year-label';
     label.textContent = year + '년';
     group.appendChild(label);
 
-    // 그리드
-    const grid = document.createElement('div');
+    var grid = document.createElement('div');
     grid.className = 'rounds-grid';
 
     rounds.forEach(function(round) {
-      const key = year + '_' + round;
-      const count = s.roundMap[key] || 0;
-      const is4th = round === '4회';
+      var key   = year + '_' + round;
+      var count = s.roundMap[key] || 0;
+      var is4th = round === '4회';
 
-      // URL 인코딩 파라미터
-      const href = 'quiz.html?year=' + encodeURIComponent(year) +
-                   '&round='         + encodeURIComponent(round);
+      // quiz.html?year=2025&round=1회 형태로 이동
+      var href = 'quiz.html?year=' + encodeURIComponent(year) +
+                 '&round='         + encodeURIComponent(round);
 
-      const card = document.createElement('a');
+      var card = document.createElement('a');
       card.className = 'round-card' + (is4th ? ' special' : '');
       card.href = href;
       card.innerHTML =
-        '<span class="round-badge">' + round + '</span>' +
+        '<span class="round-badge">' + year + '년 ' + round + '</span>' +
         '<div class="round-title">' + year + '년<br>' + round + '</div>' +
-        '<div class="round-count">📝 ' + count + '문항</div>';
+        '<div class="round-count">📝 ' + count + '문항</div>' +
+        '<span class="round-arrow">↗</span>';
 
       grid.appendChild(card);
     });

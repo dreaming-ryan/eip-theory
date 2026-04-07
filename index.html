@@ -7,7 +7,15 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#F6F4EF;--surface:#FFFFFF;--border:#E5E2D8;--text-main:#1A1917;--text-sub:#6B6760;--text-muted:#A8A49E;--green:#1B7A5A;--green-l:#E3F4EE;--purple:#4A3FA0;--purple-l:#ECEAFA;--r-lg:20px;--r-md:14px;--sh-sm:0 1px 4px rgba(0,0,0,.06);--sh-lg:0 12px 40px rgba(0,0,0,.12)}
+:root{
+  --bg:#F6F4EF;--surface:#FFFFFF;--border:#E5E2D8;
+  --text-main:#1A1917;--text-sub:#6B6760;--text-muted:#A8A49E;
+  --green:#1B7A5A;--green-l:#E3F4EE;
+  --purple:#4A3FA0;--purple-l:#ECEAFA;
+  --orange:#C05C1A;--orange-l:#FEF0E6;
+  --r-lg:20px;--r-md:14px;
+  --sh-sm:0 1px 4px rgba(0,0,0,.06);--sh-lg:0 12px 40px rgba(0,0,0,.12)
+}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .site-header{width:100%;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -29,38 +37,66 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .skel{display:inline-block;width:60px;height:20px;background:linear-gradient(90deg,#ece9e0 25%,#f6f4ef 50%,#ece9e0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:4px;vertical-align:middle}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem}
+
+/* ── 카드 그리드 ── */
+/* 회차·키워드는 나란히 2열, 변형문제는 아래 1열 full-width */
 .main-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:2rem}
 .main-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:2rem 1.6rem 1.8rem;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;gap:14px;transition:all .2s ease;position:relative;overflow:hidden;box-shadow:var(--sh-sm)}
 .main-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;opacity:0;transition:opacity .2s}
 .main-card:hover{box-shadow:var(--sh-lg);transform:translateY(-3px);border-color:transparent}
 .main-card:hover::before{opacity:1}
+
+/* 회차별 */
 .card-round{animation:fadeUp .6s .15s ease both}
 .card-round::before{background:var(--green)}
 .card-round:hover{border-color:var(--green-l)}
+/* 키워드별 */
 .card-keyword{animation:fadeUp .6s .22s ease both}
 .card-keyword::before{background:var(--purple)}
 .card-keyword:hover{border-color:var(--purple-l)}
+/* 기출 변형 — 2열 전체 */
+.card-variant{grid-column:span 2;flex-direction:row;align-items:center;gap:20px;padding:1.6rem 2rem;animation:fadeUp .6s .29s ease both}
+.card-variant::before{background:var(--orange)}
+.card-variant:hover{border-color:var(--orange-l)}
+.card-variant .card-body{flex:1}
+
 .card-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.card-round .card-icon{background:var(--green-l)}
+.card-round   .card-icon{background:var(--green-l)}
 .card-keyword .card-icon{background:var(--purple-l)}
+.card-variant .card-icon{background:var(--orange-l);width:48px;height:48px;font-size:22px}
+
 .card-body{flex:1}
 .card-title{font-size:16px;font-weight:700;color:var(--text-main);letter-spacing:-.02em;margin-bottom:6px;line-height:1.4}
+.card-variant .card-title{font-size:15px}
 .card-desc{font-size:12px;color:var(--text-sub);line-height:1.6}
 .card-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
 .chip{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
 .chip-g{background:var(--green-l);color:var(--green)}
 .chip-p{background:var(--purple-l);color:var(--purple)}
+.chip-o{background:var(--orange-l);color:var(--orange)}
 .card-arrow{align-self:flex-end;font-size:18px;color:var(--text-muted);transition:transform .2s,color .2s}
+.card-variant .card-arrow{align-self:center;flex-shrink:0}
 .main-card:hover .card-arrow{transform:translate(3px,-3px)}
-.card-round:hover .card-arrow{color:var(--green)}
+.card-round:hover   .card-arrow{color:var(--green)}
 .card-keyword:hover .card-arrow{color:var(--purple)}
-.notice{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.1rem 1.4rem;display:flex;gap:12px;align-items:flex-start;animation:fadeUp .6s .3s ease both}
+.card-variant:hover .card-arrow{color:var(--orange)}
+
+/* 준비 중 배지 */
+.badge-soon{display:inline-block;font-size:9px;font-weight:600;color:var(--orange);background:var(--orange-l);padding:2px 7px;border-radius:6px;vertical-align:middle;margin-left:6px;letter-spacing:.04em}
+
+.notice{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1.1rem 1.4rem;display:flex;gap:12px;align-items:flex-start;animation:fadeUp .6s .36s ease both}
 .notice-icon{font-size:16px;flex-shrink:0;margin-top:1px}
 .notice-text{font-size:12px;color:var(--text-sub);line-height:1.65}
 .notice-text strong{color:var(--text-main);font-weight:600}
 .footer{text-align:center;font-size:12px;color:var(--text-muted);padding:1.5rem;border-top:1px solid var(--border);width:100%}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:480px){.main-cards{grid-template-columns:1fr}.stats-row{gap:8px}.stat-num{font-size:22px}}
+@media(max-width:480px){
+  .main-cards{grid-template-columns:1fr}
+  .card-variant{grid-column:span 1;flex-direction:column;padding:2rem 1.6rem 1.8rem}
+  .card-variant .card-arrow{align-self:flex-end}
+  .stats-row{gap:8px}
+  .stat-num{font-size:22px}
+}
 </style>
 </head>
 <body>
@@ -97,6 +133,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   <p class="section-label">학습 방식 선택</p>
 
   <div class="main-cards">
+
+    <!-- ① 회차별 -->
     <a class="main-card card-round" href="by_round.html">
       <div class="card-icon">📅</div>
       <div class="card-body">
@@ -108,19 +146,44 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       </div>
       <div class="card-arrow">↗</div>
     </a>
+
+    <!-- ② 키워드별 -->
     <a class="main-card card-keyword" href="by_category.html">
       <div class="card-icon">🏷️</div>
       <div class="card-body">
         <div class="card-title">키워드별<br>기출문제 풀기</div>
         <div class="card-desc">취약한 분야를<br>집중 공략하기</div>
+        <!-- ✅ 수정 4: 카테고리 칩 변경 -->
         <div class="card-chips">
+          <span class="chip chip-p">SW 개발/계획</span>
           <span class="chip chip-p">DB</span>
-          <span class="chip chip-p">보안</span>
+          <span class="chip chip-p">정보보안</span>
           <span class="chip chip-p">네트워크</span>
+          <span class="chip chip-p">SQL문</span>
         </div>
       </div>
       <div class="card-arrow">↗</div>
     </a>
+
+    <!-- ③ 기출 변형문제 (full-width) -->
+    <!-- ✅ 수정 3: 기출 변형문제 카드 추가 -->
+    <a class="main-card card-variant" href="#">
+      <div class="card-icon">✏️</div>
+      <div class="card-body">
+        <div class="card-title">
+          기출 변형문제 풀기
+          <span class="badge-soon">준비 중</span>
+        </div>
+        <div class="card-desc">기출 개념을 변형한 문제로 실력을 한 단계 높이세요.</div>
+        <div class="card-chips">
+          <span class="chip chip-o">단답형</span>
+          <span class="chip chip-o">서술형</span>
+          <span class="chip chip-o">개념 확장</span>
+        </div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
   </div>
 
   <div class="notice">
@@ -138,13 +201,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <script src="stats.js"></script>
 <script>
 QuizStats.load(function(s) {
-  const minY = s.years[0], maxY = s.years[s.years.length - 1];
+  var minY = s.years[0], maxY = s.years[s.years.length - 1];
   document.getElementById('header-range').textContent = minY + '~' + maxY + '년 전 회차';
-  document.getElementById('hero-total').textContent = ' ' + s.totalQ + '선';
-  document.getElementById('stat-total').innerHTML  = s.totalQ + '<sub>문항</sub>';
-  document.getElementById('stat-rounds').innerHTML = s.totalRounds + '<sub>회차</sub>';
-  document.getElementById('stat-cats').innerHTML   = Object.keys(s.catMap).length + '<sub>개</sub>';
-  const ch = document.getElementById('chips-round');
+  document.getElementById('hero-total').textContent   = ' ' + s.totalQ + '선';
+  document.getElementById('stat-total').innerHTML     = s.totalQ + '<sub>문항</sub>';
+  document.getElementById('stat-rounds').innerHTML    = s.totalRounds + '<sub>회차</sub>';
+  document.getElementById('stat-cats').innerHTML      = Object.keys(s.catMap).length + '<sub>개</sub>';
+
+  var ch = document.getElementById('chips-round');
   ch.innerHTML = '';
   [minY + '년~', maxY + '년', s.totalRounds + '회차'].forEach(function(t) {
     var sp = document.createElement('span');
@@ -152,6 +216,7 @@ QuizStats.load(function(s) {
     sp.textContent = t;
     ch.appendChild(sp);
   });
+
   document.getElementById('footer-text').textContent =
     '정보처리기사 실기 이론 기출문제 학습 자료 · ' + minY + '~' + maxY + '년';
 });
