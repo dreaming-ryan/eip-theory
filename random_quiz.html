@@ -204,7 +204,7 @@ body {
 }
 
 /* 문제 본문 */
-.card-body { padding: 1.25rem 1.5rem; }
+.card-body { padding: 1.25rem 1.5rem 0; }
 .q-text {
   font-size: 15px; line-height: 1.8;
   color: var(--c-text);
@@ -271,12 +271,14 @@ body {
 .card-actions {
   padding: 0 1.5rem 1.25rem;
   display: flex; gap: 8px; flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
 }
 .btn-reveal {
-  flex: 1; min-width: 120px;
+  flex: 0 0 auto;
   background: var(--c-accent); color: #fff;
   border: none; border-radius: var(--r-sm);
-  padding: 10px 20px; font-size: 14px; font-weight: 700;
+  padding: 10px 28px; font-size: 14px; font-weight: 700;
   cursor: pointer; transition: all .15s;
   font-family: inherit;
 }
@@ -353,7 +355,8 @@ body {
 /* ── 반응형 ── */
 @media (max-width: 600px) {
   .ctrl-panel { padding: 1rem; }
-  .card-body, .ans-body { padding: 1rem; }
+  .card-body { padding: 1rem 1rem 0; }
+  .ans-body { padding: 1rem; }
   .card-meta, .card-actions { padding-left: 1rem; padding-right: 1rem; }
   .ctrl-sep { display: none; }
   .btn-reveal, .btn-next, .btn-skip { padding: 10px 14px; }
