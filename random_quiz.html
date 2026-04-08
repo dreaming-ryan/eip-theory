@@ -319,7 +319,7 @@ body {
 .done-card.show { display: block; }
 .done-emoji { font-size: 3rem; margin-bottom: 1rem; }
 .done-title {
-  font-family: 'Noto Serif KR', serif;
+  font-family: 'Pretendard', 'Noto Serif KR', serif;
   font-size: 1.5rem; font-weight: 700;
   color: var(--c-text); margin-bottom: 0.5rem;
 }
@@ -339,12 +339,6 @@ body {
   font-size: 15px; display: none;
 }
 .empty-msg.show { display: block; }
-
-/* ── 이전/다음 탐색 미니 버튼 ── */
-.nav-row {
-  display: flex; justify-content: center; gap: 12px;
-  margin-top: 1.25rem;
-}
 
 /* ── 통계 배지 ── */
 .stat-row {
@@ -463,7 +457,7 @@ body {
 
 <script>
 // ══════════════════════════════════════════════════════
-//  데이터 — quiz.html에서 직접 가져온 실제 데이터
+//  데이터 — quiz.html에서 직접 추출한 실제 데이터
 // ══════════════════════════════════════════════════════
 const questions = [
   // ─── 2025년 3회 ───
@@ -1562,7 +1556,69 @@ WHERE p.name IN (
 3      while (a &lt; m || b[a] &lt; x) {
 4          if (b[a] &lt; 0)
 5              b[a] = -b[a];
+6          a++;
+7      }
+8      return 1;
+9  }</div><br><div style="display:flex;justify-content:center;margin:12px 0"><svg viewBox="0 0 340 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px">
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4a7eba"/></marker></defs>
 
+<!-- ① int a=0 (사각형) -->
+<rect x="120" y="20" width="80" height="36" rx="5" fill="#5b9bd5"/>
+<text x="160" y="43" text-anchor="middle" fill="white" font-size="15" font-weight="bold">①</text>
+
+<!-- ①→② -->
+<line x1="160" y1="56" x2="160" y2="88" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+
+<!-- ② while 조건 (마름모) -->
+<polygon points="160,92 220,122 160,152 100,122" fill="#5b9bd5"/>
+<text x="160" y="128" text-anchor="middle" fill="white" font-size="15" font-weight="bold">②</text>
+
+<!-- ② YES → ③ (아래) -->
+<line x1="160" y1="152" x2="160" y2="184" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+<text x="172" y="172" fill="#333" font-size="10">YES</text>
+
+<!-- ② NO → ⑥ (오른쪽) -->
+<line x1="220" y1="122" x2="300" y2="122" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+<text x="255" y="114" text-anchor="middle" fill="#333" font-size="10">NO</text>
+
+<!-- ⑥ return 1 (사각형, 오른쪽) -->
+<rect x="300" y="104" width="34" height="36" rx="5" fill="#5b9bd5"/>
+<text x="317" y="128" text-anchor="middle" fill="white" font-size="15" font-weight="bold">⑥</text>
+
+<!-- ③ if 조건 (마름모) -->
+<polygon points="160,188 220,218 160,248 100,218" fill="#5b9bd5"/>
+<text x="160" y="224" text-anchor="middle" fill="white" font-size="15" font-weight="bold">③</text>
+
+<!-- ③ YES → ④ (아래) -->
+<line x1="160" y1="248" x2="160" y2="280" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+<text x="172" y="268" fill="#333" font-size="10">YES</text>
+
+<!-- ③ NO → ⑤ (왼쪽으로 빠져서 ⑤로 직접) -->
+<path d="M100,218 L60,218 L60,368 L118,368" stroke="#4a7eba" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<text x="45" y="295" text-anchor="middle" fill="#333" font-size="10">NO</text>
+
+<!-- ④ b[a]=-b[a] (사각형) -->
+<rect x="120" y="282" width="80" height="36" rx="5" fill="#5b9bd5"/>
+<text x="160" y="306" text-anchor="middle" fill="white" font-size="15" font-weight="bold">④</text>
+
+<!-- ④→⑤ -->
+<line x1="160" y1="318" x2="160" y2="350" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ar)"/>
+
+<!-- ⑤ a++ (사각형) -->
+<rect x="120" y="352" width="80" height="36" rx="5" fill="#5b9bd5"/>
+<text x="160" y="376" text-anchor="middle" fill="white" font-size="15" font-weight="bold">⑤</text>
+
+<!-- ⑤ → ② 루프백 (오른쪽으로 빠져서 위로) -->
+<path d="M200,370 L260,370 L260,122 L222,122" stroke="#4a7eba" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+
+</svg></div><br>문장 커버리지 순서: 1 → 2 → ( ⑦ )`,
+    ansHtml:`<div class="answer-val">① int a = 0; &nbsp; ② while (a &lt; m || b[a] &lt; x) &nbsp; ③ if (b[a] &lt; 0) &nbsp; ④ b[a] = -b[a]; &nbsp; ⑤ a++; &nbsp; ⑥ return 1;</div><div class="keyword-detail">📌 <b>풀이</b><br>문장 커버리지는 코드의 모든 실행 줄을 최소 1번 통과하면 만족해요. while 루프를 적어도 1번 통과해야 ③④⑤를 실행할 수 있어요. 경로 1→2→3→4→5→2→6으로 모든 노드를 최소 1회 방문해요.<br><br>📎 <b>커버리지 종류 비교 (약→강)</b><div class="tbl-wrap" style="margin-top:8px"><table class="db-table" style="width:100%;table-layout:fixed"><colgroup><col style="width:35%"><col style="width:65%"></colgroup><tr><th style="text-align:center">키워드</th><th style="text-align:center">설명</th></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>문장(Statement) 커버리지</b></td><td style="text-align:left;vertical-align:middle">모든 실행 가능한 문장을 최소 1번 수행하면 충족돼요. 가장 약한 기준이지만 기본이에요. ← <u>이번 문제</u></td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>결정(Decision) 커버리지</b></td><td style="text-align:left;vertical-align:middle">각 결정문(if, while 등)의 결과가 참(T)과 거짓(F)을 각각 최소 1번씩 가져야 해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>조건(Condition) 커버리지</b></td><td style="text-align:left;vertical-align:middle">결정문 안의 개별 원자 조건식 각각이 T/F를 최소 1번씩 가져야 해요. 단, 결정문 전체의 T/F는 보장하지 않는 함정이 있어요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>조건/결정 커버리지</b></td><td style="text-align:left;vertical-align:middle">결정 커버리지와 조건 커버리지를 동시에 만족해야 해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>다중 조건 커버리지</b></td><td style="text-align:left;vertical-align:middle">결정문 내 모든 조건의 가능한 조합을 전부 테스트해요. 조건이 n개이면 최대 2^n개 테스트 케이스가 필요해서 비용이 커요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>MC/DC</b></td><td style="text-align:left;vertical-align:middle">각 조건이 독립적으로 전체 결정에 영향을 미치는 경우만 선별해요. 항공(DO-178C)·자동차(ISO 26262) 등 안전 필수 시스템에서 의무 적용해요.</td></tr></table></div></div>` },
+
+  // ─── 2025년 2회 추가 ───
+  { id:'25_2_11', year:'2025', round:'2회', cat:'네트워크',
+    qHtml:`<div class="q-text">아래 조건을 참고하여 빈칸 ①②에 알맞은 값을 각각 구하시오.<br><br>· 특정 호스트의 IP 주소: 223.13.234.132<br>· 적용된 서브넷 마스크: 255.255.255.192<br><br>(1) 위 호스트가 소속된 네트워크의 주소를 구하면 223.13.234.( ① )이다.<br>(2) 해당 서브넷에서 실제로 할당 가능한 호스트의 최대 개수는 ( ② )개이다.<br>※ 네트워크 주소와 브로드캐스트 주소는 호스트 수 계산에서 제외한다.</div>`,
+    ansHtml:`<div class="answer-val">① 128 &nbsp;&nbsp; ② 62</div><div class="keyword-detail">📌 <b>풀이</b><br>서브넷 마스크 255.255.255.192=/26이에요. 마지막 옥텟 192=11000000이므로 블록 크기=64예요. 132 AND 192=128(네트워크 주소), 사용 가능 호스트=64-2=62개예요.<br><br>📎 <b>서브네팅 핵심 공식 정리</b><div class="tbl-wrap" style="margin-top:8px"><table class="db-table" style="width:100%;table-layout:fixed"><colgroup><col style="width:35%"><col style="width:65%"></colgroup><tr><th style="text-align:center">키워드</th><th style="text-align:center">설명</th></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>AND 연산 원리</b></td><td style="text-align:left;vertical-align:middle">IP 주소와 서브넷 마스크를 2진수로 변환 후 AND 연산하면 네트워크 주소가 나와요. 132=10000100, 192=11000000, AND=10000000=128이에요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>CIDR 표기법(/26)</b></td><td style="text-align:left;vertical-align:middle">/26은 앞에서 26비트가 네트워크 부분임을 의미해요. 255.255.255.192를 2진수로 쓰면 26개의 1과 6개의 0이에요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>블록 크기 계산</b></td><td style="text-align:left;vertical-align:middle">256 - 서브넷 마스크의 마지막 옥텟으로 계산해요. 256 - 192 = 64예요. 이 네트워크는 64개의 IP 주소를 가져요(128~191).</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>브로드캐스트 주소</b></td><td style="text-align:left;vertical-align:middle">네트워크의 마지막 IP 주소예요. 128 + 64 - 1 = 191이에요. 즉 223.13.234.191이에요. 이 주소로 패킷을 보내면 네트워크 내 모든 장치가 받아요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>사용 가능 호스트 수</b></td><td style="text-align:left;vertical-align:middle">블록 크기 - 2 = 64 - 2 = 62개예요. -2 이유: 맨 첫 번째(네트워크 주소 .128)와 마지막(브로드캐스트 .191)은 장치에 할당할 수 없어요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>서브네팅의 목적</b></td><td style="text-align:left;vertical-align:middle">IPv4 주소 낭비를 줄이기 위해 큰 네트워크를 작은 서브네트워크로 나눠요. 보안 및 트래픽 관리에도 도움이 돼요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>클래스별 기본 서브넷</b></td><td style="text-align:left;vertical-align:middle">A클래스(/8, 255.0.0.0), B클래스(/16, 255.255.0.0), C클래스(/24, 255.255.255.0)가 기본이에요.</td></tr></table></div></div` }
+];
 
 const variantQuestions = {
 
@@ -2700,12 +2756,8 @@ WHERE num1 IN (1, 3) OR num2 IN (4, 9)</div>`,
 let curYear = 'all';
 let curCat  = 'all';
 let includeVariant = false;
-
-// 현재 풀 (섞인 문제 목록)
 let pool = [];
-// 완료한 문제 인덱스 집합
 let doneSet = new Set();
-// 현재 풀에서 몇 번째 문제를 보고 있나
 let curIdx  = 0;
 
 // ══════════════════════════════════════════════════════
@@ -2729,19 +2781,17 @@ function shuffle(arr) {
 }
 
 // ══════════════════════════════════════════════════════
-//  풀 빌드 — 필터 적용 후 셔플
+//  풀 빌드
 // ══════════════════════════════════════════════════════
 function rebuildPool() {
   includeVariant = document.getElementById('toggle-variant').checked;
 
-  // 1. 기출 원본 문제 필터링
   let baseItems = questions.filter(q => {
     if (curYear !== 'all' && q.year !== curYear) return false;
     if (curCat  !== 'all' && q.cat  !== curCat)  return false;
     return true;
   }).map(q => ({ type:'original', q }));
 
-  // 2. 변형 기출 문제 (원본과 동일 필터 조건 적용)
   let varItems = [];
   if (includeVariant) {
     questions.forEach(q => {
@@ -2790,12 +2840,7 @@ function renderCard() {
   const wrap = document.getElementById('quiz-card-wrap');
   const done = document.getElementById('done-card');
 
-  if (pool.length === 0) {
-    wrap.innerHTML = '';
-    return;
-  }
-
-  // 미완료 문제 중 현재 인덱스
+  if (pool.length === 0) { wrap.innerHTML = ''; return; }
   if (curIdx >= pool.length) curIdx = 0;
 
   const item = pool[curIdx];
@@ -2803,16 +2848,15 @@ function renderCard() {
   const q  = item.q;
   const vd = variantQuestions[q.id];
 
-  // 문제 HTML
-  const qHtml   = isVariant ? vd.qHtml   : q.qHtml;
-  const ansHtml  = isVariant ? vd.ansHtml : q.ansHtml;
+  const qHtml  = isVariant ? vd.qHtml  : q.qHtml;
+  const ansHtml = isVariant ? vd.ansHtml : q.ansHtml;
 
-  const posLabel = (curIdx + 1) + ' / ' + pool.length;
+  const posLabel  = (curIdx + 1) + ' / ' + pool.length;
   const badgeHtml = isVariant
     ? '<span class="variant-badge-sm">✦ 변형 기출</span>'
     : '';
 
-  const cardHtml = `
+  wrap.innerHTML = `
     <div class="quiz-card" id="qcard">
       <div class="card-meta">
         <span class="meta-year">${q.year} ${q.round}</span>
@@ -2835,8 +2879,6 @@ function renderCard() {
       </div>
     </div>
   `;
-
-  wrap.innerHTML = cardHtml;
   done.classList.remove('show');
 }
 
@@ -2849,8 +2891,6 @@ function toggleAns() {
   const isOpen = aw.classList.toggle('open');
   btn.textContent = isOpen ? '▲ 정답 닫기' : '▼ 정답 보기';
   btn.classList.toggle('revealed', isOpen);
-
-  // 정답 보면 완료 처리
   if (isOpen) {
     doneSet.add(curIdx + '_' + pool[curIdx].type);
     updateProgress();
@@ -2861,13 +2901,10 @@ function toggleAns() {
 //  다음 문제
 // ══════════════════════════════════════════════════════
 function nextCard() {
-  // 현재 문제 완료 처리 (정답 안 봐도 넘기면 완료)
   doneSet.add(curIdx + '_' + pool[curIdx].type);
   updateProgress();
-
   curIdx++;
   if (curIdx >= pool.length) {
-    // 전부 완료
     document.getElementById('quiz-card-wrap').innerHTML = '';
     const done = document.getElementById('done-card');
     done.classList.add('show');
@@ -2875,13 +2912,12 @@ function nextCard() {
       '총 ' + pool.length + '문제를 모두 완료했어요! 다시 시작할 수 있어요.';
     return;
   }
-
   renderCard();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ══════════════════════════════════════════════════════
-//  건너뛰기 (완료 처리 안 함)
+//  건너뛰기
 // ══════════════════════════════════════════════════════
 function skipCard() {
   curIdx++;
