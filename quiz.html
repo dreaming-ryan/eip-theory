@@ -1253,8 +1253,90 @@ WHERE EMPNO > 100 AND SAL >= 3000 OR EMPNO = 200;</div>`,
     qHtml:`<div class="q-text">TCP/IP에서 IP 패킷 처리 시 발생하는 오류를 알리는 프로토콜의 영문 약자를 쓰시오. (이 프로토콜 패킷을 연속 전송하여 서버 자원을 고갈시키는 Flooding 공격에도 활용된다.)</div>`,
     ansHtml:`<div class="answer-val">ICMP (Internet Control Message Protocol)</div><div class="keyword-detail">📌 <b>풀이</b><br><b>ICMP</b>는 IP 통신 중 발생하는 오류를 보고하거나 네트워크 상태를 진단하는 프로토콜이에요. <code>ping</code>과 <code>traceroute</code> 명령이 ICMP를 사용해요. ICMP 패킷 연속 전송으로 DoS 공격(Ping Flood)도 가능해요.<br><br>📎 <b>ICMP 관련 키워드</b><div class="tbl-wrap" style="margin-top:8px"><table class="db-table" style="width:100%;table-layout:fixed"><colgroup><col style="width:35%"><col style="width:65%"></colgroup><tr><th style="text-align:center">키워드</th><th style="text-align:center">설명</th></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>ICMP (Internet Control Message Protocol)</b></td><td style="text-align:left;vertical-align:middle">IP의 오류 보고·제어 메시지 전달 프로토콜이에요. 네트워크 계층에서 동작해요. ← <u>정답</u></td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>ping 명령</b></td><td style="text-align:left;vertical-align:middle">ICMP Echo Request를 보내고 Echo Reply를 받아 호스트 생존 여부와 응답 시간을 확인해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>traceroute / tracert</b></td><td style="text-align:left;vertical-align:middle">ICMP를 이용해 목적지까지 거치는 라우터 경로를 추적해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>Ping Flood</b></td><td style="text-align:left;vertical-align:middle">ICMP 패킷을 대량으로 전송해서 네트워크를 마비시키는 DoS 공격이에요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>Ping of Death</b></td><td style="text-align:left;vertical-align:middle">비정상적으로 큰 ICMP 패킷을 전송해서 시스템을 마비시키는 공격이에요.</td></tr></table></div></div>` },
   { id:'20_3_6', year:'2020', round:'3회', cat:'SW 개발/계획',
-    qHtml:`<div class="q-text">아래 제어 흐름 그래프에서 분기 커버리지(Branch Coverage)를 만족하기 위한 테스트 경로 두 가지를 쓰시오.<br><br><div class="tbl-wrap"><table class="db-table" style="min-width:280px"><tr><th colspan="2">제어 흐름 (노드 1~7)</th></tr><tr><td colspan="2" style="text-align:left">1→2→3(분기A참)→4→5→6(분기B참)→7→1<br>분기A 거짓: 3→5. 분기B 거짓: 6→1(종료)</td></tr></table></div>`,
-    ansHtml:`<div class="answer-val">경로1: 1→2→3→4→5→6→1 &nbsp;&nbsp; 경로2: 1→2→4→5→6→7</div><div class="keyword-detail">📌 <b>풀이</b><br>분기(결정) 커버리지는 제어 흐름도의 모든 분기(참/거짓)를 최소 1번씩 통과해야 해요. 두 경로를 통해 분기점 A(참·거짓)·B(참·거짓)를 모두 커버해요.<br><br>📎 <b>커버리지 종류 비교 (약→강)</b><div class="tbl-wrap" style="margin-top:8px"><table class="db-table" style="width:100%;table-layout:fixed"><colgroup><col style="width:35%"><col style="width:65%"></colgroup><tr><th style="text-align:center">키워드</th><th style="text-align:center">설명</th></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>문장(Statement) 커버리지</b></td><td style="text-align:left;vertical-align:middle">모든 실행 가능한 코드 줄을 최소 1번 실행해요. 가장 기본·약한 기준이에요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>결정(Decision)/분기(Branch) 커버리지</b></td><td style="text-align:left;vertical-align:middle">각 결정문(if·while 등)의 T/F를 각각 최소 1번씩 통과해야 해요. ← <u>이번 문제</u></td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>조건(Condition) 커버리지</b></td><td style="text-align:left;vertical-align:middle">결정문 안 개별 원자 조건식 각각이 T/F를 최소 1번씩 가져야 해요. 결정문 전체 T/F는 보장하지 않아요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>MC/DC</b></td><td style="text-align:left;vertical-align:middle">각 조건이 독립적으로 전체 결정에 영향을 미치는 경우만 선별해요. 항공·자동차 안전 시스템에서 의무 적용해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>경로(Path) 커버리지</b></td><td style="text-align:left;vertical-align:middle">가능한 모든 실행 경로를 테스트해요. 루프가 있으면 경로가 무한해져서 실제 적용이 어려워요.</td></tr><tr><td colspan="2" style="color:var(--c-text2);font-style:italic;border-top:1px dashed var(--c-border2)">📝 강도 순서: 문장 &lt; 분기 &lt; 조건 &lt; 조건/결정 &lt; 다중 조건 &lt; MC/DC</td></tr></table></div></div>` },
+    qHtml:`<div class="q-text">다음 아래 제어 흐름 그래프가 분기 커버리지를 만족하기 위한 테스팅 순서를 쓰시오.<br><br><div style="display:flex;justify-content:center;margin:12px 0"><svg viewBox="0 0 460 600" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;font-family:monospace">
+<defs>
+  <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L9,3 z" fill="#4a7eba"/>
+  </marker>
+</defs>
+
+<!-- ===== 루프백 라인: ⑥YES → ① (맨 왼쪽) ===== -->
+<!-- ⑥ 왼쪽꼭짓점(105,405) → 왼쪽 세로선 → ① 왼쪽 끝 -->
+<polyline points="105,405 25,405 25,47 99,47" fill="none" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="64" y="432" text-anchor="middle" fill="#333" font-size="10">YES</text>
+
+<!-- ===== ① FLAG=FALSE ===== -->
+<rect x="99" y="28" width="148" height="38" rx="4" fill="#5b9bd5"/>
+<text x="173" y="52" text-anchor="middle" fill="white" font-size="11" font-weight="bold">FLAG = FALSE</text>
+<!-- 번호 원: 노드 우측 상단 바깥 -->
+<circle cx="262" cy="28" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="262" y="33" text-anchor="middle" fill="white" font-size="11" font-weight="bold">1</text>
+
+<!-- ①→② -->
+<line x1="173" y1="66" x2="173" y2="98" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ② X>K? (마름모) ===== -->
+<polygon points="173,102 235,133 173,164 111,133" fill="#5b9bd5"/>
+<text x="173" y="137" text-anchor="middle" fill="white" font-size="11" font-weight="bold">A &gt; B ?</text>
+<circle cx="249" cy="108" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="249" y="113" text-anchor="middle" fill="white" font-size="11" font-weight="bold">2</text>
+
+<!-- ② YES → ③ (오른쪽) -->
+<line x1="235" y1="133" x2="308" y2="133" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="269" y="125" text-anchor="middle" fill="#333" font-size="10">YES</text>
+
+<!-- ===== ③ FLAG=TRUE ===== -->
+<rect x="308" y="114" width="110" height="38" rx="4" fill="#5b9bd5"/>
+<text x="363" y="129" text-anchor="middle" fill="white" font-size="10" font-weight="bold">FLAG</text>
+<text x="363" y="143" text-anchor="middle" fill="white" font-size="10" font-weight="bold">= TRUE</text>
+<circle cx="308" cy="106" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="308" y="111" text-anchor="middle" fill="white" font-size="11" font-weight="bold">3</text>
+
+<!-- ③→② 루프백: ③ 상단→위로→② 상단꼭짓점 -->
+<polyline points="363,114 363,82 173,82 173,100" fill="none" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ② NO → ④ (아래) -->
+<line x1="173" y1="164" x2="173" y2="204" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ④ X=X+2 ===== -->
+<rect x="99" y="204" width="148" height="38" rx="4" fill="#5b9bd5"/>
+<text x="173" y="228" text-anchor="middle" fill="white" font-size="11" font-weight="bold">N = N + 2</text>
+<circle cx="262" cy="204" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="262" y="209" text-anchor="middle" fill="white" font-size="11" font-weight="bold">4</text>
+
+<!-- ④→⑤ -->
+<line x1="173" y1="242" x2="173" y2="282" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ⑤ CALL FUNC ===== -->
+<rect x="99" y="282" width="148" height="48" rx="4" fill="#5b9bd5"/>
+<text x="173" y="302" text-anchor="middle" fill="white" font-size="10" font-weight="bold">CALL FUNC(N,</text>
+<text x="173" y="320" text-anchor="middle" fill="white" font-size="10" font-weight="bold">FLAG, RES)</text>
+<circle cx="262" cy="282" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="262" y="287" text-anchor="middle" fill="white" font-size="11" font-weight="bold">5</text>
+
+<!-- ⑤→⑥ -->
+<line x1="173" y1="330" x2="173" y2="370" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+
+<!-- ===== ⑥ RESULT>1? (마름모) ===== -->
+<polygon points="173,374 235,405 173,436 111,405" fill="#5b9bd5"/>
+<text x="173" y="400" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RES</text>
+<text x="173" y="415" text-anchor="middle" fill="white" font-size="10" font-weight="bold">&gt; 1 ?</text>
+<circle cx="249" cy="380" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="249" y="385" text-anchor="middle" fill="white" font-size="11" font-weight="bold">6</text>
+
+<!-- ⑥ NO → ⑦ (오른쪽) -->
+<line x1="235" y1="405" x2="308" y2="405" stroke="#4a7eba" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="269" y="397" text-anchor="middle" fill="#333" font-size="10">NO</text>
+
+<!-- ===== ⑦ OUTPUT RES ===== -->
+<rect x="308" y="386" width="110" height="38" rx="4" fill="#5b9bd5"/>
+<text x="363" y="401" text-anchor="middle" fill="white" font-size="10" font-weight="bold">OUTPUT</text>
+<text x="363" y="415" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RES</text>
+<circle cx="308" cy="378" r="12" fill="#2e75b6" stroke="white" stroke-width="1.5"/>
+<text x="308" y="383" text-anchor="middle" fill="white" font-size="11" font-weight="bold">7</text>
+
+</svg></div>`,
+    ansHtml:`<div class="answer-val">1234561, 124567 &nbsp; 또는 &nbsp; 1234567, 124561</div><div class="keyword-detail">📌 <b>풀이</b><br>분기 커버리지는 제어 흐름도의 모든 분기(참/거짓)를 최소 1번씩 지나야 해요. 분기점 ②(A>B?)와 ⑥(RES>1?)의 T/F 4가지를 모두 통과해야 해요.<br><br>📎 <b>커버리지 종류 비교 (약→강)</b><div class="tbl-wrap" style="margin-top:8px"><table class="db-table" style="width:100%;table-layout:fixed"><colgroup><col style="width:35%"><col style="width:65%"></colgroup><tr><th style="text-align:center">키워드</th><th style="text-align:center">설명</th></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>문장(Statement) 커버리지</b></td><td style="text-align:left;vertical-align:middle">가장 기본적인 기준으로, 모든 실행 가능한 코드 줄을 최소 1번 실행하면 충족돼요. 분기의 한 방향만 실행해도 통과될 수 있어서 약한 기준이에요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>결정(Decision)/분기(Branch) 커버리지</b></td><td style="text-align:left;vertical-align:middle">각 결정문(if, while, for 등)의 결과가 T와 F를 각각 최소 1번씩 가져야 해요. ← <u>이번 문제</u></td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>조건(Condition) 커버리지</b></td><td style="text-align:left;vertical-align:middle">결정문 안의 개별 원자 조건식 각각이 T/F를 최소 1번씩 가져야 해요. 단, 결정문 전체의 T/F는 보장하지 않는 함정이 있어요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>조건/결정 커버리지</b></td><td style="text-align:left;vertical-align:middle">결정 커버리지와 조건 커버리지를 동시에 만족해야 해요. 두 기준의 약점을 보완해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>다중 조건 커버리지</b></td><td style="text-align:left;vertical-align:middle">결정문 내 모든 조건의 가능한 조합을 전부 테스트해요. 조건이 n개면 최대 2^n개 테스트 케이스가 필요해서 비용이 커요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>MC/DC</b></td><td style="text-align:left;vertical-align:middle">각 조건이 독립적으로 전체 결정에 영향을 미치는 경우만 선별해요. 항공(DO-178C)·자동차(ISO 26262) 등 안전 필수 시스템에서 의무 적용해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>경로(Path) 커버리지</b></td><td style="text-align:left;vertical-align:middle">프로그램의 가능한 모든 실행 경로를 테스트해요. 가장 강력하지만 루프가 있으면 경로가 무한해져 실제로는 적용이 불가능해요.</td></tr></table></div></div>` },
   { id:'20_3_7', year:'2020', round:'3회', cat:'SQL문',
     qHtml:`<div class="q-text">아래 성적 테이블에서 과목별 점수 평균이 90점 이상인 과목이름, 최소점수, 최대점수를 구하는 SQL 문을 작성하시오.<br><br>조건: WHERE 사용 금지 · GROUP BY·HAVING 필수 · 별칭(AS) 사용<br><br><div class="tbl-wrap"><table class="db-table"><tr><th>과목코드</th><th>과목이름</th><th>점수</th></tr><tr><td>1000</td><td>컴퓨터과학</td><td>95</td></tr><tr><td>2000</td><td>운영체제</td><td>85</td></tr><tr><td>1000</td><td>컴퓨터과학</td><td>85</td></tr><tr><td>2000</td><td>운영체제</td><td>80</td></tr></table></div>`,
     ansHtml:`<div class="answer-val">SELECT 과목이름, MIN(점수) AS 최소점수, MAX(점수) AS 최대점수 FROM 성적 GROUP BY 과목이름 HAVING AVG(점수) &gt;= 90</div><div class="keyword-detail">📌 <b>풀이</b><br>GROUP BY로 과목별 그룹화하고 HAVING으로 그룹 평균 조건을 필터링해요. WHERE 사용 금지이므로 집계 조건은 반드시 HAVING을 사용해요.<br><br>📎 <b>GROUP BY / HAVING 관련 키워드</b><div class="tbl-wrap" style="margin-top:8px"><table class="db-table" style="width:100%;table-layout:fixed"><colgroup><col style="width:35%"><col style="width:65%"></colgroup><tr><th style="text-align:center">키워드</th><th style="text-align:center">설명</th></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>GROUP BY</b></td><td style="text-align:left;vertical-align:middle">지정 컬럼을 기준으로 그룹화해요. 집계 함수(COUNT·SUM·AVG·MAX·MIN)와 함께 사용해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>HAVING</b></td><td style="text-align:left;vertical-align:middle">GROUP BY 이후 집계 결과에 조건을 적용해요. WHERE에는 집계 함수 사용 불가해요. ← <u>이번 문제 핵심</u></td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>WHERE vs HAVING</b></td><td style="text-align:left;vertical-align:middle">WHERE: 개별 행 필터(GROUP BY 전). HAVING: 그룹 결과 필터(GROUP BY 후).</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>AS (별칭)</b></td><td style="text-align:left;vertical-align:middle">컬럼이나 테이블에 별칭(Alias)을 붙여요. MIN(점수) AS 최소점수처럼 사용해요.</td></tr><tr><td style="font-weight:600;color:var(--c-text);text-align:center;vertical-align:middle"><b>집계 함수 NULL</b></td><td style="text-align:left;vertical-align:middle">AVG·SUM·MIN·MAX는 NULL을 제외하고 계산해요. COUNT(*)만 NULL 포함.</td></tr></table></div></div>` },
